@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 app_name = 'NewsFeed'
@@ -10,5 +9,6 @@ urlpatterns = [
     path('tag=<str:tag_name>/', views.tag_filtered, name='news_tag_filtered'),
     path('tag=<str:tag_name>/<int:page_num>/', views.tag_filtered, name='news_tag_filtered_with_page_num'),
     path('article/<int:article_id>/sendcomment', views.send_comment, name='send_comment'),
-]   #put create news here btw
+]
+#put create news here btw
     #Maybe i should make tags as parameters for get view

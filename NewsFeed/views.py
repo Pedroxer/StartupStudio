@@ -53,11 +53,13 @@ def index_using_culling(request, page_num='1'):
     total_pages = int(math.ceil(articles_count / 5))
     page_numbers = [x for x in range(1, total_pages + 1)][:7]
     if total_pages > 8:
-        page_numbers.append(total_pages)  # add the reference to the last page
-    context['page_numbers'] = page_numbers #Код надо наверное отрефакторить?
+        page_numbers.append(total_pages)
+    context['page_numbers'] = page_numbers
 
     return render(request, 'NewsFeed/index.html', context)
 
+# add the reference to the last page
+    # Код надо наверное отрефакторить?
 
 def tag_filtered(request, tag_name, page_num='1'):
     all_articles = NewsArticle.objects.filter(tags__tag_name=tag_name).filter(pub_date__lte=timezone.now())
