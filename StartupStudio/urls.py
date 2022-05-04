@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('news/', include('NewsFeed.urls')),
     path('events/', include('EventCalendar.urls')),
+    path('', include('core.urls')),
 ]

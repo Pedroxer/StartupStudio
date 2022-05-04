@@ -34,6 +34,13 @@ class NewsArticle(models.Model):
         now = timezone.now()
         return now - datetime.timedelta(days=4) <= self.pub_date <= now
 
+    class Meta:
+        permissions = [
+            ("create_new_news", "Can create new news"),
+            ("delete_their_news", "Can delete their own news"),
+            ("delete_any_news", "Can delete any news"),
+        ]
+
 
 class Comment(models.Model):
     article = models.ForeignKey(NewsArticle, on_delete=models.CASCADE)
