@@ -4,7 +4,7 @@ from UserSystem.models import CustomUser
 
 class Direction(models.Model):
     direction_name = models.CharField(max_length=100)
-    direction_info = models.CharField(max_length=800)
+    direction_info = models.CharField(max_length=800, blank=True)
 
     def __str__(self):
         return self.direction_name
@@ -12,7 +12,7 @@ class Direction(models.Model):
 
 class EventType(models.Model):
     event_type_name = models.CharField(max_length=50)
-    event_type_info = models.CharField(max_length=800)
+    event_type_info = models.CharField(max_length=800, blank=True)
 
     def __str__(self):
         return self.event_type_name
@@ -20,7 +20,7 @@ class EventType(models.Model):
 
 class Skill(models.Model):
     skill_name = models.CharField(max_length=80)
-    skill_info = models.CharField(max_length=800)
+    skill_info = models.CharField(max_length=800, blank=True)
 
     def __str__(self):
         return self.skill_name
@@ -28,6 +28,9 @@ class Skill(models.Model):
 
 class EntryStatus(models.Model):
     entry_name = models.CharField(max_length=80)
+
+    def __str__(self):
+        return self.entry_name
 
 
 class Team(models.Model):
@@ -95,6 +98,9 @@ class TeamEntry(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.ForeignKey(EntryStatus, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return  self.user.username + " to " + self.team.team_name
 
 
 
