@@ -1,5 +1,6 @@
 import math
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -49,6 +50,7 @@ def index_using_culling(request, page_num='1'):
     for item in latest_article_list:
         item.news_text = item.news_text[:item.news_main_text_culling]
     context = {'latest_article_list': latest_article_list}
+    context['current_user'] = request.user
 
     total_pages = int(math.ceil(articles_count / 5))
     page_numbers = [x for x in range(1, total_pages + 1)][:7]

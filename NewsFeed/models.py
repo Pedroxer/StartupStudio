@@ -45,7 +45,7 @@ class NewsArticle(models.Model):
 class Comment(models.Model):
     article = models.ForeignKey(NewsArticle, on_delete=models.CASCADE)
 #    user_name = models.CharField(max_length=30)
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(CustomUser,  null=True, on_delete=models.SET_NULL)
     comment_text = models.CharField(max_length=600)
     pub_time = models.DateTimeField('date published')
 

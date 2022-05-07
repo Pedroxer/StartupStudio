@@ -13,6 +13,7 @@
 		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
 	</nav>
 {% if latest_article_list %}
+    <p align="center">Current user: {{ current_user }} <a href="{% url 'core:logout' %}">Logout:</a></p>
     {% for news_article in latest_article_list %}
         <article><h2><a href="{% url 'NewsFeed:detail' news_article.id %}">{{ news_article.news_title }}</a></h2>
         <div class="flex-body" style="display: flex; justify-content: space-between">

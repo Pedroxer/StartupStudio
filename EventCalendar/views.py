@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -33,6 +34,7 @@ def tag_filtered(request, tag_name):
     return render(request, 'EventCalendar/index.html', context)
 # Create your views here.
 
+@login_required
 def send_comment(request, event_id):
     event = get_object_or_404(EventPage, pk=event_id)
     user = get_object_or_404(CustomUser, pk=request.POST['user_id'])
