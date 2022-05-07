@@ -50,9 +50,20 @@ class Project(models.Model):
     project_skills = models.ManyToManyField(Skill)
     project_authors = models.ManyToManyField(CustomUser)
     project_teams = models.ManyToManyField(Team, blank=True)
+    #project status should be mad of lists
+
+    PROJECT_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'), ('act', 'Active'), ('fin', 'Finished'))
+
+    project_status = models.CharField(max_length=3, choices=PROJECT_STATUS, blank=True, default='p', help_text="Current project status")
 
     def __str__(self):
         return self.project_name
+
+    class Meta:
+        permissions = [
+            ("can_manage_projects", "Can manage projects"),
+            ("can_moderate_projects", "Can moderate projects"),
+        ]
 
 
 class ProjectEntry(models.Model):

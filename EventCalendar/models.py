@@ -49,7 +49,13 @@ class EventComment(models.Model):
 #    user_name = models.CharField(max_length=30)
     user_id = models.ForeignKey(CustomUser,  null=True, on_delete=models.SET_NULL)
     comment_text = models.CharField(max_length=600)
-    pub_time = models.DateTimeField('date published')
+    pub_datetime = models.DateTimeField('date published')
+
+    class Meta:
+        ordering = ["pub_datetime"]
+
+    def __str__(self):
+        return self.user_id.username + ": " +str(self.comment_text)[:20] + " at " + str(self.pub_datetime.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 # Create your models here.

@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from UserSystem.models import CustomUser
 
@@ -27,6 +28,8 @@ class NewsArticle(models.Model):
         ]
     )
 
+    def get_absolute_url(self):
+        return reverse('NewsFeed:detail', args=[int(self.id)])
 
     def __str__(self):
         return self.news_title
@@ -53,6 +56,12 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["pub_datetime"]
+
+    def __str__(self):
+        return self.user_id.username + ": " +str(self.comment_text)[:20] + " at " + str(self.pub_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+
+    def get_absolute_url(self):
+        return reverse('NewsFeed:detail', args=[int(self.article.id)])
 
 
 

@@ -48,3 +48,8 @@ def login_view(request): ##Это все надо переделать чере�
             login(request, user)
     form = NewUserForm()
     return render(request=request, template_name="core/login.html", context={"register_form": form})
+
+#books_containing_genre = Book.objects.filter(genre__name__icontains='fiction')
+#^ filter using name of a Foreign key field's name
+#type__cover__name__exact - filtering using multiple levels of Foreign keys
+# book -> FK type -> FK cover -> cover name
