@@ -12,15 +12,39 @@ from .models import ProjectChatMessage
 from .models import TeamChatMessage
 from .models import TeamEntry
 
-admin.site.register(Direction)
 admin.site.register(EventType)
-admin.site.register(Skill)
 admin.site.register(EntryStatus)
-admin.site.register(Team)
-admin.site.register(Project)
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_filter = ('event_type', 'project_status') #using filters for admin panel
+    list_display = ('project_name', 'event_type', 'direction_type')
+
+
+@admin.register(Skill)
+class SkillAdmin(admin.ModelAdmin):
+    list_display = ('skill_name', 'skill_info')
+
+
+@admin.register(Direction)
+class SkillAdmin(admin.ModelAdmin):
+    list_display = ('direction_name', 'direction_info')
+
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ('team_name', 'team_captain')
+
+
+@admin.register(TeamEntry)
+class TeamEntry(admin.ModelAdmin):
+    list_display = ('team', 'user')
+
+
 admin.site.register(ProjectEntry)
 admin.site.register(ProjectResult)
 admin.site.register(ProjectChatMessage)
 admin.site.register(TeamChatMessage)
-admin.site.register(TeamEntry)
+
 

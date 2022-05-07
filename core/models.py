@@ -39,7 +39,7 @@ class Team(models.Model):
     team_captain = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL, related_name="team_captain")
 
     def __str__(self):
-        return  self.team_name
+        return self.team_name
 
 
 class Project(models.Model):
@@ -50,11 +50,13 @@ class Project(models.Model):
     project_skills = models.ManyToManyField(Skill)
     project_authors = models.ManyToManyField(CustomUser)
     project_teams = models.ManyToManyField(Team, blank=True)
-    #project status should be mad of lists
+    # project status should be mad of lists
 
-    PROJECT_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'), ('act', 'Active'), ('fin', 'Finished'))
+    PROJECT_STATUS = (
+    ('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'), ('act', 'Active'), ('fin', 'Finished'))
 
-    project_status = models.CharField(max_length=3, choices=PROJECT_STATUS, blank=True, default='p', help_text="Current project status")
+    project_status = models.CharField(max_length=3, choices=PROJECT_STATUS, blank=True, default='p',
+                                      help_text="Current project status")
 
     def __str__(self):
         return self.project_name
@@ -69,7 +71,10 @@ class Project(models.Model):
 class ProjectEntry(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    status = models.ForeignKey(EntryStatus,  null=True, on_delete=models.SET_NULL)
+
+    ENTRY_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'))
+    status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='p',
+                              help_text="Current entry status")
 
     def __str__(self):
         return self.project.project_name
@@ -87,7 +92,7 @@ class ProjectResult(models.Model):
 
 class ProjectChatMessage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser,  null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL)
     message_text = models.CharField(max_length=800)
     pub_time = models.DateTimeField('Date published')
 
@@ -108,15 +113,12 @@ class TeamChatMessage(models.Model):
 class TeamEntry(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    status = models.ForeignKey(EntryStatus,  null=True, on_delete=models.SET_NULL)
+
+    ENTRY_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'))
+    status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='p',
+                              help_text="Current entry status")
 
     def __str__(self):
         return self.user.username + " to " + self.team.team_name
-
-
-
-
-
-
 
 # Create your models here.

@@ -17,8 +17,8 @@ class EventTag(models.Model):
 class EventPage(models.Model):
     event_title = models.CharField(max_length=200)
     pub_date = models.DateField('date published')
-    start_date = models.DateField('start date')
-    ending_date = models.DateField('ending date')
+    start_date = models.DateTimeField('start date')
+    ending_date = models.DateTimeField('ending date')
     entry_deadline = models.DateTimeField('entry deadline')
     event_organiser = models.CharField(max_length=60)
     event_text = models.TextField(max_length=2000)
@@ -56,7 +56,7 @@ class EventComment(models.Model):
         ordering = ["pub_datetime"]
 
     def __str__(self):
-        return self.user_id.username + ": " +str(self.comment_text)[:20] + " at " + str(self.pub_datetime.strftime("%Y-%m-%d %H:%M:%S"))
+        return self.user_id.username + ": " + str(self.comment_text)[:20] + " at " + str(self.pub_datetime.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 # Create your models here.
