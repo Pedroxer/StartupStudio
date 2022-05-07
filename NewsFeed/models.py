@@ -27,6 +27,7 @@ class NewsArticle(models.Model):
         ]
     )
 
+
     def __str__(self):
         return self.news_title
 
@@ -40,6 +41,7 @@ class NewsArticle(models.Model):
             ("delete_their_news", "Can delete their own news"),
             ("delete_any_news", "Can delete any news"),
         ]
+        ordering = ["-pub_date"]
 
 
 class Comment(models.Model):
@@ -47,7 +49,10 @@ class Comment(models.Model):
 #    user_name = models.CharField(max_length=30)
     user_id = models.ForeignKey(CustomUser,  null=True, on_delete=models.SET_NULL)
     comment_text = models.CharField(max_length=600)
-    pub_time = models.DateTimeField('date published')
+    pub_datetime = models.DateTimeField('date published')
+
+    class Meta:
+        ordering = ["pub_datetime"]
 
 
 
