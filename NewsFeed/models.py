@@ -27,6 +27,8 @@ class NewsArticle(models.Model):
             MinValueValidator(1)
         ]
     )
+    author = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL)
+
 
     def get_absolute_url(self):
         return reverse('NewsFeed:detail', args=[int(self.id)])

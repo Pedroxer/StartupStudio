@@ -32,6 +32,7 @@ class EventPage(models.Model):
             MinValueValidator(1)
         ]
     )
+    author = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["-start_date"]

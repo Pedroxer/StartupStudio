@@ -111,7 +111,7 @@ class TeamEntry(models.Model):
     status = models.ForeignKey(EntryStatus,  null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return  self.user.username + " to " + self.team.team_name
+        return self.user.username + " to " + self.team.team_name
 
 
 
