@@ -1,16 +1,8 @@
-<header>
- {% load static %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'NewsFeed/style.css' %}">
-</header>
-<body>
-    <nav>
-		<a href="{% url 'NewsFeed:news' %}">Новости</a>
-		<a href="{% url 'EventCalendar:events' %}">Мероприятия</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-	</nav>
+{% extends "base.html" %}
+{% block title %}
+<title>Новости</title>
+{% endblock %}
+{% block content %}
 <article>
     <h1>{{ newsarticle.news_title }}</h1>
     <div>{{ newsarticle.news_text }}</div>
@@ -43,6 +35,6 @@
     </div>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 </article>
-</body>
+{% endblock %}
 
 

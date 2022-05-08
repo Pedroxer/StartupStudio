@@ -1,19 +1,9 @@
-<html>
-<header>
- {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'NewsFeed/style.css' %}">
-</header>
-<body>
-    <main>
-    <nav>
-		<a href="{% url 'NewsFeed:news' %}">Новости</a>
-		<a href="{% url 'EventCalendar:events' %}">Мероприятия</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-	</nav>
+{% extends "base.html" %}
+{% block title %}
+<title>Новости</title>
+{% endblock %}
+{% block content %}
 {% if latest_article_list %}
-    <p align="center">Current user: {{ current_user }} <a href="{% url 'core:logout' %}">Logout:</a></p>
     {% for news_article in latest_article_list %}
         <article><h2><a href="{% url 'NewsFeed:detail' news_article.id %}">{{ news_article.news_title }}</a></h2>
         <div class="flex-body" style="display: flex; justify-content: space-between">
@@ -42,6 +32,5 @@
         <p style="text-align: center;"><a style="margin: 0 auto; color:white; font-size: 20px;" href="{% url 'NewsFeed:news_on_page' 1 %}">Return to the main page?</a></p>
     </div>
 {% endif %}
-    </main>
-</body>
-</html>
+
+{% endblock %}

@@ -1,17 +1,8 @@
-<html>
-<header>
- {% load static %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'EventCalendar/style.css' %}">
-</header>
-<body>
-    <nav>
-		<a href="{% url 'NewsFeed:news' %}">Новости</a>
-		<a href="{% url 'EventCalendar:events' %}">Мероприятия</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
-	</nav>
+{% extends "base.html" %}
+{% block title %}
+<title>Мероприятия</title>
+{% endblock %}
+{% block content %}
 {% if latest_event_list %}
     {% for event_article in latest_event_list %}
         <article>
@@ -37,6 +28,4 @@
 {% else %}
     <p>No news are available.</p>
 {% endif %}
-</body>
-
-</html>
+{% endblock %}

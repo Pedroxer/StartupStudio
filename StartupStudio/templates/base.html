@@ -1,0 +1,26 @@
+<html>
+<header>
+ {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'NewsFeed/style.css' %}">
+    {% block title %}
+        <title>Base</title>
+    {% endblock %}
+</header>
+<body>
+    <main>
+    {% block navigation %}
+        <nav>
+		<a href="{% url 'NewsFeed:news' %}">Новости</a>
+		<a href="{% url 'EventCalendar:events' %}">Мероприятия</a>
+		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
+		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
+		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
+	    </nav>
+    {% endblock %}
+    <p align="center">Current user: {{ request.user }} <a href="{% url 'core:logout' %}">Logout:</a></p>
+    {% block content %}
+
+    {% endblock %}
+    </main>
+</body>
+</html>
