@@ -18,7 +18,7 @@
 	    </nav>
     {% endblock %}
     {% block user %}
-        <p align="center"> {% if user.is_authenticated %} Current user: {{ request.user }}  <a href="{% url 'logout' %}">Logout</a> {% else %} You're not logged in:  <a href="{% url 'login' %}">Login</a> {% endif %}</p>
+        <p align="center"> {% if user.is_authenticated %} Current user: {{ request.user }}  <a href="{% url 'logout' %}?next={{request.path}}">Logout</a> {% else %} You're not logged in:  <a href="{% url 'login' %}">Login</a> {% endif %}</p>
     {% endblock %}
     {% block content %}
 

@@ -33,12 +33,24 @@ class DetailView(generic.DetailView):
         """
         return NewsArticle.objects.filter(pub_date__lte=timezone.now())
 
+#Checking permissions in a template: {{ perms.catalog.can_mark_returned }}
+#Checking permissions in views using decorator:
+#@permission_required('catalog.can_edit')
+
+#you can also check permissions using mixin in views
+#class MyView(PermissionRequiredMixin, View):
+#   permission_required = 'catalog.can_mark_returned'
+#    # Or multiple permissions
+#    permission_required = ('catalog.can_mark_returned', 'catalog.can_edit')
+#    # Note that 'catalog.can_edit' is just an example
+#    # the catalog application doesn't have such permission!
+
 
 def send_comment(request, article_id):
     article = get_object_or_404(NewsArticle, pk=article_id)
-    user = get_object_or_404(CustomUser, pk=request.POST['user_id'])
-    q = Comment(article=article, user_id=user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
-    q.save()
+    #user = get_object_or_404(CustomUser, pk=request.POST['user_id']) #TODO: check if this works: user_id=self.request.user
+    q = Comment(article=article, user_id=request.user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
+    q.save() #TODO: make unauthorised users to not be able to send comments
     return HttpResponseRedirect(reverse('NewsFeed:detail', args=(article_id,)))
 
 
