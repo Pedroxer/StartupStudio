@@ -20,10 +20,11 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('news/', include('NewsFeed.urls')),
     path('events/', include('EventCalendar.urls')),
     path('', RedirectView.as_view(url='/news/', permanent=True)),
-    path('c', include('core.urls')),
+    path('c/', include('core.urls')),
 ]
 
 

@@ -37,12 +37,12 @@ class DetailView(generic.DetailView):
 def send_comment(request, article_id):
     article = get_object_or_404(NewsArticle, pk=article_id)
     user = get_object_or_404(CustomUser, pk=request.POST['user_id'])
-    q = Comment(article=article, user_id=user, pub_time=timezone.now(), comment_text=request.POST['comment_text'])
+    q = Comment(article=article, user_id=user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
     q.save()
     return HttpResponseRedirect(reverse('NewsFeed:detail', args=(article_id,)))
 
 
-def index_using_culling(request, page_num='1'):
+def index_using_culling(request, page_num='1'): #Возможно, это можно переделать через ListView c Пейджингом
     all_articles = NewsArticle.objects.filter(pub_date__lte=timezone.now())
     articles_count = all_articles.count()
     latest_article_list = all_articles[(int(page_num) - 1) * 5:int(page_num) * 5]
@@ -50,11 +50,10 @@ def index_using_culling(request, page_num='1'):
     for item in latest_article_list:
         item.news_text = item.news_text[:item.news_main_text_culling]
     context = {'latest_article_list': latest_article_list}
-    context['current_user'] = request.user
 
     total_pages = int(math.ceil(articles_count / 5))
-    page_numbers = [x for x in range(1, total_pages + 1)][:7]
-    if total_pages > 8:
+    page_numbers = [x for x in range(1, total_pages + 1)][:7] #manual pagination
+    if total_pages > 8:                                       #TODO: fix pagination for 10 pages and mode (Maybe use auto pagination as well?)
         page_numbers.append(total_pages)
     context['page_numbers'] = page_numbers
 

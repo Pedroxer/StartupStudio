@@ -194,3 +194,12 @@ box-shadow: 11px 10px 8px 0px rgba(34, 60, 80, 0.2);
 	display: inline;
 
 }
+
+p a{
+	color: white;
+	text-decoration: none;
+}
+
+.logged_out_block a{
+	color: white;
+}
