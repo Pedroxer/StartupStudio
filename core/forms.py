@@ -29,7 +29,10 @@ class NewUserForm(UserCreationForm):
 
 
 class CreateProjectForm(ModelForm):
-    project_start = forms.DateField(widget=AdminDateWidget())
+    #project_start = forms.DateTimeField()
+    project_start = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'], widget=forms.DateInput(format='%d.%m.%Y %H:%i'))
+    project_end = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'],
+                                        widget=forms.DateInput(format='%d.%m.%Y %H:%i'))
     class Meta:
         model = Project
         fields = ['project_name', 'project_info', 'event_type', 'direction_type', 'project_skills', 'project_start',
@@ -38,18 +41,18 @@ class CreateProjectForm(ModelForm):
                   'event_type': 'Название направления', 'project_skills': 'Навыки мероприятия',
                   'project_start': 'Начало проекта', 'project_end': 'Конец проекта'}
         widgets = {
-            'project_end': AdminDateWidget(),
+            #'project_end': AdminDateWidget(),
         }
 
     def clean_project_end(self):
         data = self.cleaned_data['project_end']
-        if data < datetime.date.today():
+        if data.date() < datetime.date.today():
             raise ValidationError('Время конца не может быть в прошлом')
         return data
 
     def clean_project_start(self):
         data = self.cleaned_data['project_start']
-        if data < datetime.date.today():
+        if data.date() < datetime.date.today():
             raise ValidationError('Время начала не может быть в прошлом')
         return data
 

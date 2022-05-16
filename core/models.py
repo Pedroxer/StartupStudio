@@ -56,9 +56,9 @@ class Project(models.Model):
     project_authors = models.ManyToManyField(CustomUser)
     project_teams = models.ManyToManyField(Team, blank=True)
 
-    pub_date = models.DateField('Date Time published', default=timezone.now())
-    project_start = models.DateField('Project Start')
-    project_end = models.DateField('Project Ending')
+    pub_date = models.DateTimeField('Date Time published', default=timezone.now())
+    project_start = models.DateTimeField('Project Start')
+    project_end = models.DateTimeField('Project Ending')
 
     # project status should be mad of lists
 
