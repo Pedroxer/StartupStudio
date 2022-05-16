@@ -1,11 +1,13 @@
 from django.forms import DateInput
-from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 from core.models import Project
 from django.shortcuts import render, redirect
+
+from . import models
 from .forms import NewUserForm, CreateProjectForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -75,6 +77,7 @@ class ProjectCreate(CreateView):
     form_class = CreateProjectForm
 #swap with a custom form actually, so I can actually save user info as well
 
+
 class ProjectUpdate(UpdateView):
     model = Project
     fields = ['project_name', 'project_info', 'event_type', 'direction_type', 'project_skills', 'project_start',
@@ -87,4 +90,18 @@ class ProjectUpdate(UpdateView):
 class ProjectDelete(DeleteView):
     model = Project
     success_url = reverse_lazy('event_list')
+
+
+#using custom form and view in order to implement user saving
+def create_project_view(request):
+    if request.method == 'POST':
+        form = CreateProjectForm(request.POST)
+        if form.is_valid():
+            project = models.Project(project_name=form.project_name, project_info=form.project_info, event_type=form.event_type, direction_type=form.direction_type, project_start=form.project_start, project_end=form.project_end)
+            project.project_authors.add(request.user)
+            project.save()
+            return HttpResponseRedirect(reverse('core:project_detail', args=[int(project.id)]))
+    else:
+        form = CreateProjectForm()
+        return render(request, 'core/project_form.html', {'form': form})
 
