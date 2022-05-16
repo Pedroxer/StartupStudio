@@ -3,6 +3,9 @@
 <title>Новости</title>
 {% endblock %}
 {% block content %}
+    {% if tag %}
+        <p align="center"><a href="{% url 'NewsFeed:news' %}">Сбросить фильтры</a></p>
+    {% endif %}
 {% if latest_article_list %}
     {% for news_article in latest_article_list %}
         <article><h2><a href="{% url 'NewsFeed:detail' news_article.id %}">{{ news_article.news_title }}</a></h2>

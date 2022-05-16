@@ -1,4 +1,5 @@
 <html>
+{% block header %}
 <header>
  {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'NewsFeed/style.css' %}">
@@ -6,19 +7,21 @@
         <title>Base</title>
     {% endblock %}
 </header>
+{% endblock %}
 <body>
     <main>
     {% block navigation %}
         <nav>
 		<a href="{% url 'NewsFeed:news' %}">Новости</a>
 		<a href="{% url 'EventCalendar:events' %}">Мероприятия</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
+		<a href="{% url 'core:project_list' %} ">Проекты</a>
 		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
 		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
 	    </nav>
     {% endblock %}
     {% block user %}
-        <p align="center"> {% if user.is_authenticated %} Current user: {{ request.user }}  <a href="{% url 'logout' %}?next={{request.path}}">Logout</a> {% else %} You're not logged in:  <a href="{% url 'login' %}">Login</a> {% endif %}</p>
+        <p align="center"> {% if user.is_authenticated %} Current user: {{ request.user }}<a href="{% url 'logout' %}?next={{request.path}}">Logout</a>
+        {% else %} You're not logged in:  <a href="{% url 'login' %}?next={{request.path}}">Login</a> {% endif %}</p>
     {% endblock %}
     {% block content %}
 

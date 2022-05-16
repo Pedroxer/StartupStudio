@@ -31,19 +31,23 @@ class DetailView(generic.DetailView):
         return EventPage.objects.filter(pub_date__lte=timezone.now())
 
 
+@login_required
 def tag_filtered(request, tag_name):
     latest_event_list = EventPage.objects.filter(event_tags__tag_name=tag_name).filter(pub_date__lte=timezone.now())[:10]
     for item in latest_event_list:
         item.event_text = item.event_text[:item.event_main_text_culling]
     context = {'latest_event_list': latest_event_list}
+    context['tag'] = tag_name
     return render(request, 'EventCalendar/index.html', context)
 # Create your views here.
 
 
-@login_required #TODO: Проверить, все ли view написаны корректно, и можно ли заменить некоторые на обобщенные
+#TODO: MEDIUM PRIO: Проверить, все ли view написаны корректно, и можно ли заменить некоторые на обобщенные
 def send_comment(request, event_id):
-    event = get_object_or_404(EventPage, pk=event_id)
-    user = get_object_or_404(CustomUser, pk=request.POST['user_id'])
-    q = EventComment(article=event, user_id=user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
-    q.save()
+    if request.user.is_authenticated:
+        event = get_object_or_404(EventPage, pk=event_id)
+        q = EventComment(article=event, user_id=request.user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
+        q.save()
     return HttpResponseRedirect(reverse('EventCalendar:detail', args=(event_id,)))
+
+

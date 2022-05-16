@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Новости</title>
+{% endblock %}
+{% block content %}
+<article>
+    <h1>{{ project.project_name }}</h1>
+    <h2>Тип мероприятия: {{ project.event_type }} </h2>
+    <div>{{ project.project_info }}</div>
+    <div>Направление: {{ project.direction_type }}</div>
+    <p>Навыки для участия: </p>
+    <div class="tag_container"> {% for skill in project.project_skills.all %}
+        <div class="tag">{{ skill.skill_name }}</div>
+    {% endfor %}</div>
+    <div>Авторы: {% for author in project.project_authors.all %}
+            <p>{{ author.username }}</p> {% endfor %}
+   </div>
+    <p>Начало: {{ project.project_start }}</p>
+    <p>Конец: {{ project.project_end }}</p>
+    <p>Статус проекта: {{ project.get_project_status_display }}</p>
+
+    <div> <a href="NOTIMPLEMENTED"> Подать заявку на участие </a></div>
+    <p>Опубликовано: {{ project.pub_date }}</p>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+</article>
+{% endblock %}
+
+

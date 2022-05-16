@@ -1,4 +1,8 @@
+from django.urls import reverse
+from django.utils import timezone
+
 from django.db import models
+
 from UserSystem.models import CustomUser
 
 
@@ -48,18 +52,27 @@ class Project(models.Model):
     event_type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL)
     direction_type = models.ForeignKey(Direction, null=True, on_delete=models.SET_NULL)
     project_skills = models.ManyToManyField(Skill)
+
     project_authors = models.ManyToManyField(CustomUser)
     project_teams = models.ManyToManyField(Team, blank=True)
+
+    pub_date = models.DateField('Date Time published', default=timezone.now())
+    project_start = models.DateField('Project Start')
+    project_end = models.DateField('Project Ending')
+
     # project status should be mad of lists
 
     PROJECT_STATUS = (
-    ('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'), ('act', 'Active'), ('fin', 'Finished'))
+        ('pen', 'На рассмотрении'), ('acc', 'Принято'), ('den', 'Отклонено'), ('act', 'Активно'), ('fin', 'Завершено'))
 
-    project_status = models.CharField(max_length=3, choices=PROJECT_STATUS, blank=True, default='p',
+    project_status = models.CharField(max_length=3, choices=PROJECT_STATUS, blank=True, default='pen',
                                       help_text="Current project status")
 
     def __str__(self):
         return self.project_name
+
+    def get_absolute_url(self):
+        return reverse('core:project_detail', args=[int(self.id)])
 
     class Meta:
         permissions = [

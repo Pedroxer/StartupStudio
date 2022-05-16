@@ -7,5 +7,10 @@ urlpatterns = [
     path('register', views.register_request, name='register'),
     path('login', views.login_view, name='login'),
     path('logout', views.logout_view, name='logout'),
-    path('e/', views.event, name='event'),
+    path('e/<int:pk>/', views.EventDetailedView.as_view(), name='project_detail'),
+    path('projects/', views.EventListView.as_view(), name='project_list'), ##TODO: RENAME ALL EVENTS TO PROJECTS IN THIS MODULE
+    path('projects/create/', views.ProjectCreate.as_view(), name='project_create'),
+    path('projects/<int:pk>/update', views.ProjectUpdate.as_view(), name='project_update'),
+    path('projects/<int:pk>/delete', views.ProjectDelete.as_view(), name='project_delete'),
+
 ]

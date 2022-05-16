@@ -203,3 +203,11 @@ p a{
 .logged_out_block a{
 	color: white;
 }
+
+.tag_container .tag{
+	color:white;
+}
+
+.tag_container{
+	display: flex;
+}

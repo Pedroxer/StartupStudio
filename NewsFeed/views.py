@@ -47,10 +47,11 @@ class DetailView(generic.DetailView):
 
 
 def send_comment(request, article_id):
-    article = get_object_or_404(NewsArticle, pk=article_id)
     #user = get_object_or_404(CustomUser, pk=request.POST['user_id']) #TODO: check if this works: user_id=self.request.user
-    q = Comment(article=article, user_id=request.user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
-    q.save() #TODO: make unauthorised users to not be able to send comments
+    if request.user.is_authenticated:
+        article = get_object_or_404(NewsArticle, pk=article_id)
+        q = Comment(article=article, user_id=request.user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
+        q.save() #TODO: make unauthorised users to not be able to send comments
     return HttpResponseRedirect(reverse('NewsFeed:detail', args=(article_id,)))
 
 
@@ -87,5 +88,7 @@ def tag_filtered(request, tag_name, page_num='1'):
     if total_pages > 8:
         page_numbers.append(total_pages)  # add the reference to the last page
     context['page_numbers'] = page_numbers #Код надо наверное отрефакторить?
-
+    context['tag'] = tag_name
     return render(request, 'NewsFeed/index.html', context)
+
+#TODO: Medium priority: make tag reset button (Should be easy really, use ?=next) DONE

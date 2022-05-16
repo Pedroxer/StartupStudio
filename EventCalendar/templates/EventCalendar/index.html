@@ -3,6 +3,9 @@
 <title>Мероприятия</title>
 {% endblock %}
 {% block content %}
+    {% if tag %}
+        <p align="center"><a href="{% url 'EventCalendar:events' %}">Сбросить фильтры</a></p>
+    {% endif %}
 {% if latest_event_list %}
     {% for event_article in latest_event_list %}
         <article>

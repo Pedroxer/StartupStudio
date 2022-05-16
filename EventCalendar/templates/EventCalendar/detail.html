@@ -31,6 +31,7 @@
                         </div>
 			</div>
         {% endfor %}
+        {% if user.is_authenticated %}
         <div id="messagewindow">
 				<form name = "f2" action="{% url 'EventCalendar:send_comment' eventpage.pk  %}" method="post">
 				{% csrf_token %}
@@ -42,6 +43,9 @@
 				</div>
 				</form>
         </div>
+        {% else %}
+        <p align="center" class="login_to_comment_warning">Войдите, чтобы оставить комментарий</p>
+        {% endif %}
     </div>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 </article>

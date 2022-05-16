@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('news/', include('NewsFeed.urls')),
-    path('events/', include('EventCalendar.urls')),
+    path('event_news/', include('EventCalendar.urls')),
     path('', RedirectView.as_view(url='/news/', permanent=True)),
     path('c/', include('core.urls')),
 ]
