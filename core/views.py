@@ -5,13 +5,13 @@ from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 from core.models import Project
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from . import models
 from .forms import NewUserForm, CreateProjectForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 def index(request):
@@ -25,17 +25,23 @@ def event(request):
             0].project_info)
 
 
-class EventDetailedView(generic.DetailView):
+#should implement checking user permissions here (can manage the project? is the project owner? can join the project?)
+class ProjectDetailedView(generic.DetailView): #also check if already joined the project and check status of joining
     model = Project
     template_name = 'core/project_detail.html'
 
 
-class EventListView(generic.ListView):
+class ProjectListView(generic.ListView):
     model = Project
     paginate_by = 10
     template_name = 'core/project_list.html'
 
+    def get_queryset(self):
+        queryset = Project.objects.filter(project_status__in=['acc', 'act', 'fin'])
+        return queryset #using multiple values to filter out only those posts that aren't denied
 
+
+#depricated
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
@@ -58,6 +64,8 @@ def logout_view(request):
     logout(request)
     return HttpResponse("You logged out!")
 
+
+#depricated
 def login_view(request): ##Это все надо переделать через встроенные view
     if request.method == "POST":
         user = authenticate(username='Will', password='hah')
@@ -93,6 +101,7 @@ class ProjectDelete(DeleteView):
 
 
 #using custom form and view in order to implement user saving
+@permission_required('core.can_create_projects')
 def create_project_view(request):
     if request.method == 'POST':
         form = CreateProjectForm(request.POST)
@@ -104,4 +113,53 @@ def create_project_view(request):
     else:
         form = CreateProjectForm()
         return render(request, 'core/project_form.html', {'form': form})
+
+
+@permission_required('core.can_moderate_projects')
+def accept_new_projects_view(request):
+    pending_projects = Project.objects.filter(project_status='pen')
+    return render(request, 'core/new_projects_mod.html', {'object_list': pending_projects})
+
+
+@permission_required('core.can_moderate_projects')
+def accept_project_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    project.project_status = 'acc'
+    project.save()
+    return redirect('core:new_projects_mod')
+
+
+@permission_required('core.can_moderate_projects')
+def deny_project_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    project.project_status = 'den'
+    project.save()
+    return redirect('core:new_projects_mod')
+
+
+#three views below are not tested
+def start_project_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if project.project_authors.contains(request.user) or request.user.is_superuser:
+        project.project_status = 'act'
+        project.save()
+    return redirect('core:project_detail', args=[pk])
+
+
+def finish_project_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if project.project_authors.contains(request.user) or request.user.is_superuser:
+        project.project_status = 'fin'
+        project.save()
+    return reverse('core:project_detail', args=[pk])
+
+
+def enter_the_project_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if not project.project_authors.contains(request.user) and not models.ProjectEntry.objects.filter(user=request.user, project=project):
+        project_entry = models.ProjectEntry(user=request.user, project=project)
+        project_entry.save()
+    return reverse('core:project_detail', args=[pk])
+
+
 

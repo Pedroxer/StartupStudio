@@ -3,6 +3,8 @@
 <head>
  {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'NewsFeed/style.css' %}">
+
+    <!-- Use this block to integrate XDSOFT timepicker -->
     <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
@@ -10,6 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
 
+    <!-- end of a block -->
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}"/>
@@ -27,11 +30,13 @@
     </table>
     <input type="submit" value="Submit" />
     </form>
+    <!-- Use this block to bind XDSOFT timepicker to datetime widgets -->
     <script>
     $(function () {
         jQuery.datetimepicker.setLocale('ru');
       $("#id_project_start").datetimepicker({format:'d/m/Y H:i'});
       $("#id_project_end").datetimepicker({format:'d/m/Y H:i'});
     });
-  </script>
+    </script>
+    <!-- end of a block -->
 {% endblock %}

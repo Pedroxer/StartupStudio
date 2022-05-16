@@ -3,11 +3,7 @@
     <title>Новости</title>
 {% endblock %}
 {% block content %}
-    {% if user.is_authenticated %}
     <a class="create_project_button" style="color: white" href="{% url 'core:project_create' %}"> Click here to create an event </a> {# TODO: make check permissions here #}
-    {% else %}
-        <div>Войдите, чтобы добавить проект</div>
-    {% endif %}
     {% if object_list %}
         {% for project in object_list %}
             <article>
@@ -15,18 +11,19 @@
                 <h2>Тип мероприятия: {{ project.event_type }} </h2>
                 <div>{{ project.project_info }}</div>
                 <div>Направление: {{ project.direction_type }}</div>
-                <p>Навыки для участия: </p>
+                <div>Навыки для участия: </div>
                 <div class="tag_container"> {% for skill in project.project_skills.all %}
                     <div class="tag">{{ skill.skill_name }}</div>
                 {% endfor %}</div>
                 <div>Авторы: {% for author in project.project_authors.all %}
-                    <p>{{ author.username }}</p> {% endfor %}
+                    <div>{{ author.username }}</div> {% endfor %}
                 </div>
-                <p>Начало: {{ project.project_start }}</p>
-                <p>Конец: {{ project.project_end }}</p>
-                <p>Статус проекта: {{ project.get_project_status_display }}</p>
+                <div>Начало: {{ project.project_start }}</div>
+                <div>Конец: {{ project.project_end }}</div>
+                <div>Статус проекта: {{ project.get_project_status_display }}</div>
 
-                <div><a href="NOTIMPLEMENTED"> Подать заявку на участие </a></div>
+                <div><a href="{% url 'core:accept_project_mod' project.id %}"> Принять проект </a></div>
+                <div><a href="{% url 'core:deny_project_mod' project.id %}"> Отклонить проект </a></div>
                 <p>Опубликовано: {{ project.pub_date }}</p>
 
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

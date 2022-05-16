@@ -19,7 +19,7 @@
     <p>Конец: {{ project.project_end }}</p>
     <p>Статус проекта: {{ project.get_project_status_display }}</p>
 
-    <div> <a href="NOTIMPLEMENTED"> Подать заявку на участие </a></div>
+    <div> <a href="{% url 'core:enter_the_project_view' project.id %}"> Подать заявку на участие </a></div>
     <p>Опубликовано: {{ project.pub_date }}</p>
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

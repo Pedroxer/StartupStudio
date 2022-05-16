@@ -78,6 +78,7 @@ class Project(models.Model):
         permissions = [
             ("can_manage_projects", "Can manage projects"),
             ("can_moderate_projects", "Can moderate projects"),
+            ("can_create_projects", "Can create projects"),
         ]
 
 
@@ -86,7 +87,7 @@ class ProjectEntry(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     ENTRY_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'))
-    status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='p',
+    status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='pen',
                               help_text="Current entry status")
 
     def __str__(self):
