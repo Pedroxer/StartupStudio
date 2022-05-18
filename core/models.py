@@ -54,7 +54,8 @@ class Project(models.Model):
     direction_type = models.ForeignKey(Direction, null=True, on_delete=models.SET_NULL)
     project_skills = models.ManyToManyField(Skill)
 
-    project_authors = models.ManyToManyField(CustomUser)
+    project_authors = models.ManyToManyField(CustomUser, related_name="project_authors")
+    project_participants = models.ManyToManyField(CustomUser, blank=True, null=True, related_name="project_participants")
     project_teams = models.ManyToManyField(Team, blank=True)
 
     pub_date = models.DateTimeField('Date Time published', default=timezone.now())
@@ -81,7 +82,9 @@ class Project(models.Model):
             ("can_moderate_projects", "Can moderate incoming projects"),
             ("can_create_projects", "Can create projects"),
         ]
-        ordering = ['project_start']
+        ordering = ['project_start'] #take a notice, that this operation could be costly,
+    #consider swapping it to order_by on related controllers
+    #ordering is being called every query is called, that also includes foreignkeys and many-to-many fields
 
 
 class ProjectEntry(models.Model):
@@ -100,7 +103,6 @@ class ProjectEntry(models.Model):
     #this type of ordering uses too many resources, so probably it's better to move it to the other place
     #class Meta:
     #    ordering = ['-status']
-
 
 
 class ProjectResult(models.Model):

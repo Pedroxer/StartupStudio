@@ -208,6 +208,10 @@ def change_status_event_entry_view(request, project_pk, entry_pk, new_status):
     project_entry = get_object_or_404(ProjectEntry, pk=entry_pk)
     if new_status == 'accepted':
         project_entry.status = 'acc'
+        project_entry.project.project_participants.add(project_entry.user)
+    elif new_status == 'kicked': #check if this causes any errors if it somehow gets called #UPD: apparenty, it does not
+        project_entry.project.project_participants.remove(project_entry.user)
+        project_entry.status = 'den'
     else:
         project_entry.status = 'den'
     project_entry.status_changed_date = timezone.now()
@@ -226,6 +230,6 @@ def deny_event_entry_view(request, project_pk, entry_pk):
 #so here, we're looking for projects, where user is an author, or user is a participant of
 def my_projects_view(request):
     owned_projects = models.Project.objects.filter(project_authors=request.user)
-    part_projects = models.Project.objects.filter() #maybe I should swap back set with many to many users
+    part_projects = models.Project.objects.filter(project_participants=request.user) #maybe I should swap back set with many to many users
     return render(request, 'core/my_projects_list.html',
-                  {})
+                  {'owned_projects': owned_projects, 'part_projects': part_projects})

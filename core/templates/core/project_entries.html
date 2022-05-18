@@ -6,7 +6,7 @@
     {% if user.is_authenticated %}
         {% if is_author %}
             {% if project_entries %}
-                <h1>ENTRIES FOR PROJECT {{ project.project_name }}:</h1>
+                <h1> Заявки на проект {{ project.project_name }}:</h1>
                 <a class="link_to" href="{% url 'core:project_detail' project.id %}">Вернуться к странице проекта  </a>
                 {% for entry in project_entries %}
                     <article>
@@ -16,7 +16,7 @@
                             <a class="common_button" href="{% url 'core:accept_or_deny_applicant' project.id entry.id 'accepted' %}"> Принять </a>
                             <a class="common_button" href="{% url 'core:accept_or_deny_applicant' project.id entry.id 'denied' %}"> Отклонить </a>
                         {% elif entry.status == 'acc' %}
-                            <a class="common_button" href="{% url 'core:accept_or_deny_applicant' project.id entry.id 'denied' %}"> Исключить </a>
+                            <a class="common_button" href="{% url 'core:accept_or_deny_applicant' project.id entry.id 'kicked' %}"> Исключить </a>
                         {% elif entry.status == 'den' %}
                             <a class="common_button" href="{% url 'core:accept_or_deny_applicant' project.id entry.id 'accepted' %}"> Принять обратно </a>
                         {% endif %}

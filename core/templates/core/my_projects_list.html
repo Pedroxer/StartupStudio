@@ -10,8 +10,9 @@
     {% else %}
         <div>Войдите, чтобы добавить проект</div>
     {% endif %}
-    {% if object_list %}
-        {% for project in object_list %}
+    {% if owned_projects %}
+        <h2>Организованные вами проекты: </h2>
+        {% for project in owned_projects %}
             <article>
                 <h2><a href="{% url 'core:project_detail' project.id %}">{{ project.project_name }}</a></h2>
                 <h2>Тип мероприятия: {{ project.event_type }} </h2>
@@ -32,7 +33,32 @@
             </article>
         {% endfor %}
     {% else %}
-        <p>На данный момент нет проектов.</p>
+        <p>На данный момент нет проектов где вы организатор.</p>
+    {% endif %}
+    {% if part_projects %}
+        <h2>Проекты, где вы участник: </h2>
+        {% for project in part_projects %}
+            <article>
+                <h2><a href="{% url 'core:project_detail' project.id %}">{{ project.project_name }}</a></h2>
+                <h2>Тип мероприятия: {{ project.event_type }} </h2>
+                <div>{{ project.project_info }}</div>
+                <div>Направление: {{ project.direction_type }}</div>
+                <p>Навыки для участия: </p>
+                <div class="tag_container"> {% for skill in project.project_skills.all %}
+                    <div class="tag">{{ skill.skill_name }}</div>
+                {% endfor %}</div>
+                <div>Авторы: {% for author in project.project_authors.all %}
+                    <p>{{ author.username }}</p> {% endfor %}
+                </div>
+                <p>Начало: {{ project.project_start }}</p>
+                <p>Конец: {{ project.project_end }}</p>
+                <p>Статус проекта: {{ project.get_project_status_display }}</p>
+                <p>Опубликовано: {{ project.pub_date }}</p>
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>На данный момент нет проектов, где вы участник.</p>
     {% endif %}
 
 {% endblock %}

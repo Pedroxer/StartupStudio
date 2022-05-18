@@ -15,13 +15,13 @@
 		<a href="{% url 'NewsFeed:news' %}">Новости</a>
 		<a href="{% url 'EventCalendar:events' %}">Мероприятия</a>
 		<a href="{% url 'core:project_list' %} ">Проекты</a>
-		<a href="NOTIMPLEMENTED">Мои проекты</a>
-		<a href="NOTIMPLEMENTED">NOTIMPLEMENTED</a>
+		<a href="{% url 'core:my_projects_list' %}">Мои проекты</a>
+		<a href="NOTIMPLEMENTED">Мой профиль</a>
 	    </nav>
     {% endblock %}
     {% block user %}
-        <p align="center"> {% if user.is_authenticated %} Current user: {{ request.user }} <a href="{% url 'logout' %}?next={{request.path}}">Logout</a>
-        {% else %} You're not logged in:  <a href="{% url 'login' %}?next={{request.path}}">Login</a> {% endif %}</p>
+        <p align="center"> {% if user.is_authenticated %} Текущий пользователь: {{ request.user }} <a href="{% url 'logout' %}?next={{request.path}}">Выйти</a>
+        {% else %} Вы не вошли в аккаунт:  <a href="{% url 'login' %}?next={{request.path}}">Войти</a> {% endif %}</p>
     {% endblock %}
     {% block content %}
 

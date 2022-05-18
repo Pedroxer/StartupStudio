@@ -15,6 +15,7 @@ urlpatterns = [
     path('projects/<int:project_pk>/applicants/<int:entry_pk>/<str:new_status>', views.change_status_event_entry_view, name='accept_or_deny_applicant'),
     #path('e/<int:pk>/', views.ProjectDetailedView.as_view(), name='project_detail'),
     path('projects/', views.ProjectListView.as_view(), name='project_list'), ##TODO: RENAME ALL EVENTS TO PROJECTS IN THIS MODULE
+    path('projects/my_projects', views.my_projects_view, name='my_projects_list'),
     path('projects/<int:pk>/enter', views.enter_the_project_view, name='enter_the_project_view'),
     path('projects/create/', views.ProjectCreate.as_view(), name='project_create'),
     #path('projects/create/', views.create_project_view, name='project_create'),
