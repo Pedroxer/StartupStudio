@@ -8,18 +8,33 @@
     <h2>Тип мероприятия: {{ project.event_type }} </h2>
     <div>{{ project.project_info }}</div>
     <div>Направление: {{ project.direction_type }}</div>
-    <p>Навыки для участия: </p>
+    <div>Навыки для участия: </div>
     <div class="tag_container"> {% for skill in project.project_skills.all %}
         <div class="tag">{{ skill.skill_name }}</div>
     {% endfor %}</div>
     <div>Авторы: {% for author in project.project_authors.all %}
-            <p>{{ author.username }}</p> {% endfor %}
-   </div>
-    <p>Начало: {{ project.project_start }}</p>
-    <p>Конец: {{ project.project_end }}</p>
-    <p>Статус проекта: {{ project.get_project_status_display }}</p>
-
-    <div> <a href="{% url 'core:enter_the_project_view' project.id %}"> Подать заявку на участие </a></div>
+            <div>{{ author.username }}</div> {% endfor %}
+    </div>
+    <div>Начало: {{ project.project_start }}</div>
+    <div>Конец: {{ project.project_end }}</div>
+    <div>Статус проекта: {{ project.get_project_status_display }}</div>
+    {% if is_author %}
+        <div><a class="to_link" href="{% url 'core:check_applicants_for_project' project.id %}"> Перейти к заявкам проекта </a></div>
+    {% else %}
+    {% if already_entered %} {# although you can easily swap already_entered for {{ project_entry }} #}
+        {% if project_entry.status == 'pen' %}  {# you can leave it be, as it won't necessary be much better #}
+            <div>Статус заявки: <span class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
+        {% elif project_entry.status == 'acc' %}
+            <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
+        {% elif project_entry.status == 'den' %}
+            <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
+        {% endif %}
+    {% elif user.is_authenticated %}
+        <div> <a href="{% url 'core:enter_the_project_view' project.id %}"> Подать заявку на участие </a></div>
+    {% else %}
+        <div> Чтобы подать заявку, <a class="to_link" href="{% url 'login' %}"> Войдите </a></div>
+    {% endif %}
+    {% endif %}
     <p>Опубликовано: {{ project.pub_date }}</p>
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

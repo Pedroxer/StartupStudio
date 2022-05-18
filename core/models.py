@@ -30,6 +30,7 @@ class Skill(models.Model):
         return self.skill_name
 
 
+#Depricated?
 class EntryStatus(models.Model):
     entry_name = models.CharField(max_length=80)
 
@@ -77,21 +78,29 @@ class Project(models.Model):
     class Meta:
         permissions = [
             ("can_manage_projects", "Can manage projects"),
-            ("can_moderate_projects", "Can moderate projects"),
+            ("can_moderate_projects", "Can moderate incoming projects"),
             ("can_create_projects", "Can create projects"),
         ]
+        ordering = ['project_start']
 
 
 class ProjectEntry(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField('Время, когда заяка была отправлена', default=timezone.now()) #use timezone.now() to apply default state to the date field
+    status_changed_date = models.DateTimeField('Время, когда статус заявки был изменен', default=timezone.now())
 
-    ENTRY_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'))
+    ENTRY_STATUS = (('pen', 'На рассмотрении'), ('acc', 'Заявка одобрена'), ('den', 'Заявка отклонена'))
     status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='pen',
                               help_text="Current entry status")
 
     def __str__(self):
         return self.project.project_name
+
+    #this type of ordering uses too many resources, so probably it's better to move it to the other place
+    #class Meta:
+    #    ordering = ['-status']
+
 
 
 class ProjectResult(models.Model):
