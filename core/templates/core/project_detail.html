@@ -1,44 +1,99 @@
 {% extends "base.html" %}
 {% block title %}
-<title>Новости</title>
+    <title>Новости</title>
 {% endblock %}
 {% block content %}
-<article>
-    <h1>{{ project.project_name }}</h1>
-    <h2>Тип мероприятия: {{ project.event_type }} </h2>
-    <div>{{ project.project_info }}</div>
-    <div>Направление: {{ project.direction_type }}</div>
-    <div>Навыки для участия: </div>
-    <div class="tag_container"> {% for skill in project.project_skills.all %}
-        <div class="tag">{{ skill.skill_name }}</div>
-    {% endfor %}</div>
-    <div>Авторы: {% for author in project.project_authors.all %}
-            <div>{{ author.username }}</div> {% endfor %}
-    </div>
-    <div>Начало: {{ project.project_start }}</div>
-    <div>Конец: {{ project.project_end }}</div>
-    <div>Статус проекта: {{ project.get_project_status_display }}</div>
-    {% if is_author %}
-        <div><a class="to_link" href="{% url 'core:check_applicants_for_project' project.id %}"> Перейти к заявкам проекта </a></div>
-    {% else %}
-    {% if already_entered %} {# although you can easily swap already_entered for {{ project_entry }} #}
-        {% if project_entry.status == 'pen' %}  {# you can leave it be, as it won't necessary be much better #}
-            <div>Статус заявки: <span class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
-        {% elif project_entry.status == 'acc' %}
-            <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
-        {% elif project_entry.status == 'den' %}
-            <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
-        {% endif %}
-    {% elif user.is_authenticated %}
-        <div> <a href="{% url 'core:enter_the_project_view' project.id %}"> Подать заявку на участие </a></div>
-    {% else %}
-        <div> Чтобы подать заявку, <a class="to_link" href="{% url 'login' %}"> Войдите </a></div>
-    {% endif %}
-    {% endif %}
-    <p>Опубликовано: {{ project.pub_date }}</p>
+    <article>
+        <div class="main-container">
+            <div class="main-info-container">
+                <h1>{{ project.project_name }}</h1>
+                <h2>Тип мероприятия: {{ project.event_type }} </h2>
+                <div>{{ project.project_info }}</div>
+                <div>Направление: {{ project.direction_type }}</div>
+                <div>Навыки для участия:</div>
+                <div class="tag_container"> {% for skill in project.project_skills.all %}
+                    <div class="tag">{{ skill.skill_name }}</div>
+                {% endfor %}</div>
+                <div>Авторы: {% for author in project.project_authors.all %}
+                    <div>{{ author.username }}</div> {% endfor %}
+                </div>
+                <div>Начало: {{ project.project_start }}</div>
+                <div>Конец: {{ project.project_end }}</div>
+                <div>Статус проекта: {{ project.get_project_status_display }}</div>
+                {% if is_author %}
+                    <div><a class="to_link" href="{% url 'core:check_applicants_for_project' project.id %}"> Перейти к
+                        заявкам проекта </a></div>
+                    <div><a class="to_link" href="{% url 'core:look_participants_of_project' project.id %}">Показать
+                        участников проекта</a></div>
 
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-</article>
+                {% else %}
+                    {% if already_entered %} {# although you can easily swap already_entered for {{ project_entry }} #}
+                        {% if project_entry.status == 'pen' %}
+                            {# you can leave it be, as it won't necessary be much better #}
+                            <div>Статус заявки: <span
+                                    class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
+                        {% elif project_entry.status == 'acc' %}
+                            <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
+                            <div class="regular_text">Ваша команда: У вас пока нет команды <a href="">Найти</a> </div>
+                        {% elif project_entry.status == 'den' %}
+                            <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
+                        {% endif %}
+                    {% elif user.is_authenticated %}
+                        <div><a href="{% url 'core:enter_the_project_view' project.id %}"> Подать заявку на участие </a>
+                        </div>
+                    {% else %}
+                        <div> Чтобы подать заявку, <a class="to_link" href="{% url 'login' %}"> Войдите </a></div>
+                    {% endif %}
+                {% endif %}
+                <p>Опубликовано: {{ project.pub_date }}</p>
+            </div>
+            <div class="notice_board_outer">
+                Объявления:
+            <div class="notice_board">
+                {% if user.is_authenticated %}
+                    <div class="message-container">
+                    {% for notice in project.projectnotice_set.all %}
+                    <div class="box">
+						<div class="Name">{{notice.user.username}} {{notice.pub_datetime}}
+                            <p>{{notice.notice_text}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </div>
+                    {% if is_author %}
+                    <div id="messagewindow">
+                        <form name="f2" action="{% url 'core:project_send_notice' project.id %}" method="post">
+                            {% csrf_token %}
+                            <div id="sendcontainer"><textarea name="notice_text" cols="50" rows="4"
+                                                              placeholder="Написать новое объявление..."
+                                                              id="chatbox"> </textarea>
+                                <div id="buttoncontainer">
+                                    <input type="submit" name="button" value="Отправить" id="sendbutton">
+                                </div>
+                                <textarea style="display: none;" name="user_id">1</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    {% else %}
+                        <style> .message-container{height: 100%}</style>
+                    {% endif %}
+                {% else %}
+                    <p align="center" class="login_to_comment_warning">Войдите, чтобы оставить комментарий</p>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        <div class="chat_outer_container">
+                <div class="group_picker">
+                    <div id="main_chat_button">Общий чат</div>
+                    <div id="team_chat_button">Чат команды</div>
+                </div>
+                <div class="chat_container">
+
+                </div>
+        </div>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    </article>
 {% endblock %}
 
 

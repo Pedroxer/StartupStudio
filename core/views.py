@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
 
-from core.models import Project, ProjectEntry
+from core.models import Project, ProjectEntry, Team
 from django.shortcuts import render, redirect, get_object_or_404
 
 from . import models
@@ -57,7 +57,7 @@ class ProjectListView(generic.ListView):
         return queryset  # using multiple values to filter out only those posts that aren't denied
 
 
-# depricated
+# deprecated
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
@@ -81,7 +81,7 @@ def logout_view(request):
     return HttpResponse("You logged out!")
 
 
-# depricated
+# deprecated
 def login_view(request):  ##Это все надо переделать через встроенные view
     if request.method == "POST":
         user = authenticate(username='Will', password='hah')
@@ -202,6 +202,23 @@ def look_project_applicants_view(request, pk):
                   {'project_entries': project_entries, 'is_author': is_author, 'project': project})
 
 
+def look_project_participants_view(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    is_author = False
+    project_entries = None
+
+    if request.user.is_authenticated:
+        if project.project_authors.contains(request.user):
+            project_participants = project.project_participants.all()
+            is_author = True
+        else:
+            project = None
+
+    #TODO: need pagination here
+    return render(request, 'core/project_participants.html',
+                  {'project_entries': project_entries, 'is_author': is_author, 'project': project})
+
+
 # could probably group these instead, using 1 case and getting #done using bool and if statement
 # swap with more if statements if needed
 def change_status_event_entry_view(request, project_pk, entry_pk, new_status):
@@ -233,3 +250,27 @@ def my_projects_view(request):
     part_projects = models.Project.objects.filter(project_participants=request.user) #maybe I should swap back set with many to many users
     return render(request, 'core/my_projects_list.html',
                   {'owned_projects': owned_projects, 'part_projects': part_projects})
+
+
+#should you really merge notice/comments views into one?
+@login_required
+def send_notice(request, project_pk):
+    if request.user.is_authenticated:
+        project = get_object_or_404(Project, pk=project_pk)
+        q = models.ProjectNotice(project=project, user=request.user, pub_datetime=timezone.now(), notice_text=request.POST['notice_text'])
+        q.save()
+    return HttpResponseRedirect(reverse('core:project_detail', args=(project_pk,)))
+
+
+#but you can really merge project/team into one, using 1 additional variable
+@login_required
+def send_message(request, project_pk, team_pk):
+    if request.user.is_authenticated:
+        project = get_object_or_404(Project, pk=project_pk)
+        if team_pk is None:
+            q = models.ProjectChatMessage(project=project, user=request.user, pub_datetime=timezone.now(), message_text=request.POST['message_text'])
+        else:
+            team = get_object_or_404(Team, pk=team_pk)
+            q = models.TeamChatMessage(team=team, user=request.user, pub_datetime=timezone.now(), message_text=request.POST['message_text'])
+        q.save()
+    return HttpResponseRedirect(reverse('core:project_detail', args=(project_pk,)))

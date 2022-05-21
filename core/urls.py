@@ -11,8 +11,10 @@ urlpatterns = [
     path('login', RedirectView.as_view(url=reverse_lazy('accounts/login/')), name='login_core'),
     path('logout', views.logout_view, name='logout'),
     path('projects/<int:pk>/', views.project_detail_view, name='project_detail'),
+    path('projects/<int:project_pk>/send_notice', views.send_notice, name='project_send_notice'),
     path('projects/<int:pk>/applicants', views.look_project_applicants_view, name='check_applicants_for_project'),
     path('projects/<int:project_pk>/applicants/<int:entry_pk>/<str:new_status>', views.change_status_event_entry_view, name='accept_or_deny_applicant'),
+    path('projects/<int:pk>/participants', views.look_project_participants_view, name='look_participants_of_project'),
     #path('e/<int:pk>/', views.ProjectDetailedView.as_view(), name='project_detail'),
     path('projects/', views.ProjectListView.as_view(), name='project_list'), ##TODO: RENAME ALL EVENTS TO PROJECTS IN THIS MODULE
     path('projects/my_projects', views.my_projects_view, name='my_projects_list'),

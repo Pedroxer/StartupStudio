@@ -11,6 +11,7 @@ from .models import ProjectResult
 from .models import ProjectChatMessage
 from .models import TeamChatMessage
 from .models import TeamEntry
+from .models import ProjectNotice
 
 admin.site.register(EventType)
 admin.site.register(EntryStatus)
@@ -42,9 +43,15 @@ class TeamEntry(admin.ModelAdmin):
     list_display = ('team', 'user')
 
 
+@admin.register(ProjectNotice)
+class ProjectNotice(admin.ModelAdmin):
+    list_display = ('notice_text', 'user', 'project')
+
+
 admin.site.register(ProjectEntry)
 admin.site.register(ProjectResult)
 admin.site.register(ProjectChatMessage)
 admin.site.register(TeamChatMessage)
+
 
 

@@ -42,6 +42,9 @@ class Team(models.Model):
     team_name = models.CharField(max_length=80)
     team_members = models.ManyToManyField(CustomUser, related_name="team_members")
     team_captain = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL, related_name="team_captain")
+    team_info = models.CharField(max_length=800, null=True, blank=True)
+    team_lfg_message = models.CharField(max_length=800, null=True, blank=True)
+    is_looking_for_group = models.BooleanField(default=False)
 
     def __str__(self):
         return self.team_name
@@ -57,6 +60,7 @@ class Project(models.Model):
     project_authors = models.ManyToManyField(CustomUser, related_name="project_authors")
     project_participants = models.ManyToManyField(CustomUser, blank=True, null=True, related_name="project_participants")
     project_teams = models.ManyToManyField(Team, blank=True)
+    maximum_members_in_team = models.IntegerField(default=4)
 
     pub_date = models.DateTimeField('Date Time published', default=timezone.now())
     project_start = models.DateTimeField('Project Start')
@@ -119,7 +123,7 @@ class ProjectChatMessage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL)
     message_text = models.CharField(max_length=800)
-    pub_time = models.DateTimeField('Date published')
+    pub_datetime = models.DateTimeField('Date published')
 
     def __str__(self):
         return self.message_text
@@ -129,7 +133,7 @@ class TeamChatMessage(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL)
     message_text = models.CharField(max_length=800)
-    pub_time = models.DateTimeField('Date published')
+    pub_datetime = models.DateTimeField('Date published')
 
     def __str__(self):
         return self.message_text
@@ -147,3 +151,12 @@ class TeamEntry(models.Model):
         return self.user.username + " to " + self.team.team_name
 
 # Create your models here.
+
+
+class ProjectNotice(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    notice_text = models.CharField(max_length=800)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, blank=True, null=True)
+    pub_datetime = models.DateTimeField(default=timezone.now())
+
+

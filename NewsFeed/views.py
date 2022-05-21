@@ -46,12 +46,13 @@ class DetailView(generic.DetailView):
 #    # the catalog application doesn't have such permission!
 
 
+@login_required
 def send_comment(request, article_id):
     #user = get_object_or_404(CustomUser, pk=request.POST['user_id']) #TODO: check if this works: user_id=self.request.user
     if request.user.is_authenticated:
         article = get_object_or_404(NewsArticle, pk=article_id)
         q = Comment(article=article, user_id=request.user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
-        q.save() #TODO: make unauthorised users to not be able to send comments
+        q.save() #TODO: make unauthorised users to not be able to send comments DONE
     return HttpResponseRedirect(reverse('NewsFeed:detail', args=(article_id,)))
 
 
