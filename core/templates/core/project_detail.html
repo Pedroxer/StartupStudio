@@ -147,45 +147,53 @@
                 var chat_groups = {'general': general_messages, 'team': team_messages}
                 var group_overflows = {'general': document.getElementById("general-messages-container"), 'team': document.getElementById("team-messages-container")}
                 var general_link = "{% url 'core:project_send_message' project.id "general" %}"
+                var receive_links = {'general':"{% url 'core:ajax_get_messages' project.id "general" %}"}
                 var links = {'general': general_link}
                 links['team'] = ""
                 {% if team %}
                     var team_message_link = "{% url 'core:project_send_message' project.id team.id %}"
                     links['team'] = team_message_link
+                    receive_links['team'] = "{% url 'core:ajax_get_messages' project.id team.id %}"
                 {% endif %}
 
                 {# You can further automate it using Django templates adding additional groups to the dictionary #}
 
                 {# injecting javascripts if user have rights to receive a messages #}
                 {% if project_entry.status == 'acc' or is_author %}
-                    function getMessagesGeneral(){
-                        var doScroll = (group_overflows['general'].scrollTop >= 0.6 * group_overflows['general'].scrollHeight)
+                    function getMessagesGeneral(chosen_channel){
+                        var doScroll = (group_overflows[chosen_channel].scrollTop >= 0.6 * group_overflows[chosen_channel].scrollHeight)
                         console.log('Requesting JSON');
-                        $.getJSON('{% url 'core:ajax_get_messages' project.id 'general' %}', function(rowz){
-                          console.log('JSON', rowz);
-                          $('#general-messages-container').empty();
+                        $.getJSON(receive_links[chosen_channel], function(rowz){
+                          //console.log('JSON', rowz);
+                          $(group_overflows[chosen_channel]).empty();
                           for (var i = 0; i < rowz.length; i++){
                               line = rowz[i]
-                              $('#general-messages-container').append(
-                                  ' <div class=box>'
+                              $(group_overflows[chosen_channel]).append(
+                                  ' <div class=box>' +
                                   '                                        <div class="Name">' + line[0] + " " + line[3] +
                                   '                                            <p>' + line[2] + '</p>\n' +
                                   '                                        </div>\n' +
                                   '                                    </div>')
                           }
                           if (doScroll){
-                              group_overflows['general'].scrollTop = group_overflows['general'].scrollHeight;
+                              group_overflows[chosen_channel].scrollTop = group_overflows[chosen_channel].scrollHeight;
                           }
-                          setTimeout('getMessagesGeneral()', 4000)
+                          //getMessagesGeneral() //DON'T EVER DO THAT
+                          setTimeout(getMessagesGeneral, 4000, chosen_channel)
                         });
-
                     }
+
+
+                {% endif %}
                     $(document).ready(function(){
                         $.ajaxSetup({cache: false});
-                        getMessagesGeneral();
+                        {% if project_entry.status == 'acc' or is_author %}
+                            getMessagesGeneral('general');
+                        {% endif %}
+                        {% if team %}
+                            getMessagesGeneral('team');
+                        {% endif %}
                     })
-                {% endif %}
-
 
                 function openChatGroup(group) {
 
