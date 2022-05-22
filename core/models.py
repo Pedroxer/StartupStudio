@@ -122,8 +122,8 @@ class ProjectResult(models.Model):
 class ProjectChatMessage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, null=True, on_delete=models.SET_NULL)
-    message_text = models.CharField(max_length=800)
-    pub_datetime = models.DateTimeField('Date published')
+    message_text = models.CharField(max_length=800) #FOR FUTURE: Calling fields like this: MODEL_TEXT proved kinda inconvinient
+    pub_datetime = models.DateTimeField('Date published')   #might as well do just "text" next time, so models are easier to swap between
 
     def __str__(self):
         return self.message_text

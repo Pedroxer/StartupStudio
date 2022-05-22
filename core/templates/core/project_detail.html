@@ -34,7 +34,7 @@
                                     class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
                         {% elif project_entry.status == 'acc' %}
                             <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
-                            <div class="regular_text">Ваша команда: У вас пока нет команды <a href="">Найти</a> </div>
+                            <div class="regular_text">Ваша команда: У вас пока нет команды <a href="">Найти</a></div>
                         {% elif project_entry.status == 'den' %}
                             <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
                         {% endif %}
@@ -49,22 +49,85 @@
             </div>
             <div class="notice_board_outer">
                 Объявления:
-            <div class="notice_board">
-                {% if user.is_authenticated %}
-                    <div class="message-container">
-                    {% for notice in project.projectnotice_set.all %}
-                    <div class="box">
-						<div class="Name">{{notice.user.username}} {{notice.pub_datetime}}
-                            <p>{{notice.notice_text}}</p>
+                <div class="notice_board">
+                    {% if user.is_authenticated %}
+                        <div class="message-container">
+                            {% for notice in project.projectnotice_set.all %}
+                                <div class="box">
+                                    <div class="Name">{{ notice.user.username }} {{ notice.pub_datetime }}
+                                        <p>{{ notice.notice_text }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
+                        {% if is_author %}
+                            <div id="messagewindow">
+                                <form name="f2" action="{% url 'core:project_send_notice' project.id %}" method="post">
+                                    {% csrf_token %}
+                                    <div id="sendcontainer"><textarea name="notice_text" cols="50" rows="4"
+                                                                      placeholder="Написать новое объявление..."
+                                                                      id="chatbox"> </textarea>
+                                        <div id="buttoncontainer">
+                                            <input type="submit" name="button" value="Отправить" id="sendbutton">
+                                        </div>
+                                        <textarea style="display: none;" name="user_id">1</textarea>
+                                    </div>
+                                </form>
+                            </div>
+                        {% else %}
+                            <style> .message-container {
+                                height: 100%
+                            }</style>
+                        {% endif %}
+                    {% else %}
+                        <p align="center" class="login_to_comment_warning">Войдите, чтобы оставить объявление</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if project_entry.status == 'acc' or is_author %}
+            <div class="chat_outer_container">
+            <div class="group_picker">
+                <button id="general_chat_button" onclick="openChatGroup('general')">Общий чат</button>
+                <button id="team_chat_button" onclick="openChatGroup('team')">Чат команды</button>
+            </div>
+            <div class="chat_wrap">
+                <div class="chat_inner_container">
+                    <div class="message_board">
+                        <div id="general-messages">
+                            <div class="message-container">
+                                {% if general_messages %} {# TODO: swap this with ajax late #}
+                                {% for message in general_messages %}
+                                    <div class="box">
+                                        <div class="Name">{{ message.user.username }} {{ message.pub_datetime }}
+                                            <p>{{ message.message_text }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                    {% else %}
+                                    <div>Тут пока нет сообщений</div>
+                                    {% endif %}
+                            </div>
+                        </div>
+                        <div id="team-messages">
+                            <div class="message-container">
+                                {% for notice in project.projectnotice_set.all %}
+                                    <div class="box">
+                                        <div class="Name">{{ message.user.username }} {{ message.pub_datetime }}
+                                            <p>{{ message.message_text }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
                     </div>
-                    {% endfor %}
-                    </div>
-                    {% if is_author %}
+                </div>
                     <div id="messagewindow">
-                        <form name="f2" action="{% url 'core:project_send_notice' project.id %}" method="post">
+                        <form name="f2" action="{% url 'core:project_send_message' project.id "general" %}" method="post">
                             {% csrf_token %}
-                            <div id="sendcontainer"><textarea name="notice_text" cols="50" rows="4"
+                            <div id="sendcontainer"><textarea name="message_text" cols="50" rows="4"
                                                               placeholder="Написать новое объявление..."
                                                               id="chatbox"> </textarea>
                                 <div id="buttoncontainer">
@@ -74,24 +137,28 @@
                             </div>
                         </form>
                     </div>
-                    {% else %}
-                        <style> .message-container{height: 100%}</style>
-                    {% endif %}
-                {% else %}
-                    <p align="center" class="login_to_comment_warning">Войдите, чтобы оставить комментарий</p>
-                {% endif %}
-            </div>
-            </div>
-        </div>
-        <div class="chat_outer_container">
-                <div class="group_picker">
-                    <div id="main_chat_button">Общий чат</div>
-                    <div id="team_chat_button">Чат команды</div>
-                </div>
-                <div class="chat_container">
 
-                </div>
-        </div>
+            </div>
+            <script>
+                var active_chat = "general"
+
+                var general_messages = document.getElementById("general-messages");
+                var team_messages = document.getElementById("team-messages")
+                var chat_groups = {'general': general_messages, 'team': team_messages}
+
+                {# You can further automate it using Django templates adding additional groups to the dictionary #}
+
+                function openChatGroup(group) {
+                    console.log("buttonPressed" + group)
+                    for (const [key, value] of Object.entries(chat_groups)) {
+                        console.log(key, value);
+                        value.style.display = "none";
+                    }
+                    chat_groups[group].style.display = "block";
+                }
+            </script>
+        {% endif %}
+
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
     </article>
 {% endblock %}

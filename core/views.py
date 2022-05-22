@@ -37,13 +37,15 @@ def project_detail_view(request, pk):
     users_entry = None
     already_entered = False
     is_author = False
+    general_messages = None
     if request.user.is_authenticated:
         if project.project_authors.contains(request.user):
             is_author = True
         users_entry = models.ProjectEntry.objects.filter(user=request.user, project=project).first()
-        if users_entry:
+        if users_entry or is_author:
             already_entered = True #could've used approach with less lines in a controller, but using bool is just too convinient on a template
-    context = {'project': project, 'project_entry': users_entry, 'already_entered': already_entered, 'is_author': is_author}
+            general_messages = models.ProjectChatMessage.objects.filter(project=project)
+    context = {'project': project, 'project_entry': users_entry, 'already_entered': already_entered, 'is_author': is_author, 'general_messages': general_messages}
     return render(request, 'core/project_detail.html', context)
 
 
@@ -267,10 +269,36 @@ def send_notice(request, project_pk):
 def send_message(request, project_pk, team_pk):
     if request.user.is_authenticated:
         project = get_object_or_404(Project, pk=project_pk)
-        if team_pk is None:
+        if team_pk == "general":
             q = models.ProjectChatMessage(project=project, user=request.user, pub_datetime=timezone.now(), message_text=request.POST['message_text'])
         else:
             team = get_object_or_404(Team, pk=team_pk)
             q = models.TeamChatMessage(team=team, user=request.user, pub_datetime=timezone.now(), message_text=request.POST['message_text'])
         q.save()
     return HttpResponseRedirect(reverse('core:project_detail', args=(project_pk,)))
+
+
+def look_project_teams(request, pk):
+    is_user_in_project = None
+    project = get_object_or_404(Project, pk=pk)
+    if project.project_authors.contains(request.user) or project.project_participants.contains(request.user):
+        is_user_in_project = True #TODO: prorably better to just fill the variable
+    teams = project.project_teams.all()
+    return render(request, 'core/project_teams.html',
+                  {'project': project, 'is_user_in_project': is_user_in_project, 'project_teams': teams})
+
+
+#TODO: bottom is not finished
+def look_project_team_applicants(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    is_author = False
+    project_entries = None
+
+    if request.user.is_authenticated:
+        if project.project_authors.contains(request.user):
+            project_entries = models.ProjectEntry.objects.filter(project=project).order_by('-status')
+            is_author = True
+
+    #TODO: need pagination here
+    return render(request, 'core/project_entries.html',
+                  {'project_entries': project_entries, 'is_author': is_author, 'project': project})

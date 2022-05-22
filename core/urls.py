@@ -11,7 +11,11 @@ urlpatterns = [
     path('login', RedirectView.as_view(url=reverse_lazy('accounts/login/')), name='login_core'),
     path('logout', views.logout_view, name='logout'),
     path('projects/<int:pk>/', views.project_detail_view, name='project_detail'),
+    path('projects/<int:pk>/teams', views.look_project_teams, name='project_teams'),  #
+    path('projects/<int:project_pk>/teams/create', views.project_detail_view, name='project_teams'),  # TODO: WIP And bottom too
+    path('projects/<int:project_pk>/teams/<int:team_pk>/applications', views.project_detail_view, name='project_teams'),
     path('projects/<int:project_pk>/send_notice', views.send_notice, name='project_send_notice'),
+    path('projects/<int:project_pk>/send_message/<str:team_pk>', views.send_message, name='project_send_message'),
     path('projects/<int:pk>/applicants', views.look_project_applicants_view, name='check_applicants_for_project'),
     path('projects/<int:project_pk>/applicants/<int:entry_pk>/<str:new_status>', views.change_status_event_entry_view, name='accept_or_deny_applicant'),
     path('projects/<int:pk>/participants', views.look_project_participants_view, name='look_participants_of_project'),
