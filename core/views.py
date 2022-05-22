@@ -9,7 +9,7 @@ from core.models import Project, ProjectEntry, Team
 from django.shortcuts import render, redirect, get_object_or_404
 
 from . import models
-from .forms import NewUserForm, CreateProjectForm
+from .forms import NewUserForm, CreateProjectForm, CreateTeamForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -43,9 +43,10 @@ def project_detail_view(request, pk):
             is_author = True
         users_entry = models.ProjectEntry.objects.filter(user=request.user, project=project).first()
         if users_entry or is_author:
-            already_entered = True #could've used approach with less lines in a controller, but using bool is just too convinient on a template
+            already_entered = True  # could've used approach with less lines in a controller, but using bool is just too convinient on a template
             general_messages = models.ProjectChatMessage.objects.filter(project=project)
-    context = {'project': project, 'project_entry': users_entry, 'already_entered': already_entered, 'is_author': is_author, 'general_messages': general_messages}
+    context = {'project': project, 'project_entry': users_entry, 'already_entered': already_entered,
+               'is_author': is_author, 'general_messages': general_messages}
     return render(request, 'core/project_detail.html', context)
 
 
@@ -98,11 +99,13 @@ def login_view(request):  ##Это все надо переделать чере
 # type__cover__name__exact - filtering using multiple levels of Foreign keys
 # book -> FK type -> FK cover -> cover name
 
-
+# Deprecated
 class ProjectCreate(CreateView):
     model = Project
     form_class = CreateProjectForm
 
+
+#
 
 # swap with a custom form actually, so I can actually save user info as well
 
@@ -199,7 +202,7 @@ def look_project_applicants_view(request, pk):
             project_entries = models.ProjectEntry.objects.filter(project=project).order_by('-status')
             is_author = True
 
-    #TODO: need pagination here
+    # TODO: need pagination here
     return render(request, 'core/project_entries.html',
                   {'project_entries': project_entries, 'is_author': is_author, 'project': project})
 
@@ -216,7 +219,7 @@ def look_project_participants_view(request, pk):
         else:
             project = None
 
-    #TODO: need pagination here
+    # TODO: need pagination here
     return render(request, 'core/project_participants.html',
                   {'project_entries': project_entries, 'is_author': is_author, 'project': project})
 
@@ -228,7 +231,7 @@ def change_status_event_entry_view(request, project_pk, entry_pk, new_status):
     if new_status == 'accepted':
         project_entry.status = 'acc'
         project_entry.project.project_participants.add(project_entry.user)
-    elif new_status == 'kicked': #check if this causes any errors if it somehow gets called #UPD: apparenty, it does not
+    elif new_status == 'kicked':  # check if this causes any errors if it somehow gets called #UPD: apparenty, it does not
         project_entry.project.project_participants.remove(project_entry.user)
         project_entry.status = 'den'
     else:
@@ -246,34 +249,38 @@ def deny_event_entry_view(request, project_pk, entry_pk):
     return HttpResponseRedirect(reverse('core:check_applicants_for_project', args=(project_pk,)))
 
 
-#so here, we're looking for projects, where user is an author, or user is a participant of
+# so here, we're looking for projects, where user is an author, or user is a participant of
 def my_projects_view(request):
     owned_projects = models.Project.objects.filter(project_authors=request.user)
-    part_projects = models.Project.objects.filter(project_participants=request.user) #maybe I should swap back set with many to many users
+    part_projects = models.Project.objects.filter(
+        project_participants=request.user)  # maybe I should swap back set with many to many users
     return render(request, 'core/my_projects_list.html',
                   {'owned_projects': owned_projects, 'part_projects': part_projects})
 
 
-#should you really merge notice/comments views into one?
+# should you really merge notice/comments views into one?
 @login_required
 def send_notice(request, project_pk):
     if request.user.is_authenticated:
         project = get_object_or_404(Project, pk=project_pk)
-        q = models.ProjectNotice(project=project, user=request.user, pub_datetime=timezone.now(), notice_text=request.POST['notice_text'])
+        q = models.ProjectNotice(project=project, user=request.user, pub_datetime=timezone.now(),
+                                 notice_text=request.POST['notice_text'])
         q.save()
     return HttpResponseRedirect(reverse('core:project_detail', args=(project_pk,)))
 
 
-#but you can really merge project/team into one, using 1 additional variable
+# but you can really merge project/team into one, using 1 additional variable
 @login_required
 def send_message(request, project_pk, team_pk):
     if request.user.is_authenticated:
         project = get_object_or_404(Project, pk=project_pk)
         if team_pk == "general":
-            q = models.ProjectChatMessage(project=project, user=request.user, pub_datetime=timezone.now(), message_text=request.POST['message_text'])
+            q = models.ProjectChatMessage(project=project, user=request.user, pub_datetime=timezone.now(),
+                                          message_text=request.POST['message_text'])
         else:
             team = get_object_or_404(Team, pk=team_pk)
-            q = models.TeamChatMessage(team=team, user=request.user, pub_datetime=timezone.now(), message_text=request.POST['message_text'])
+            q = models.TeamChatMessage(team=team, user=request.user, pub_datetime=timezone.now(),
+                                       message_text=request.POST['message_text'])
         q.save()
     return HttpResponseRedirect(reverse('core:project_detail', args=(project_pk,)))
 
@@ -282,13 +289,13 @@ def look_project_teams(request, pk):
     is_user_in_project = None
     project = get_object_or_404(Project, pk=pk)
     if project.project_authors.contains(request.user) or project.project_participants.contains(request.user):
-        is_user_in_project = True #TODO: prorably better to just fill the variable
+        is_user_in_project = True  # TODO: prorably better to just fill the variable
     teams = project.project_teams.all()
     return render(request, 'core/project_teams.html',
                   {'project': project, 'is_user_in_project': is_user_in_project, 'project_teams': teams})
 
 
-#TODO: bottom is not finished
+# TODO: bottom is not finished
 def look_project_team_applicants(request, pk):
     project = get_object_or_404(Project, pk=pk)
     is_author = False
@@ -299,6 +306,37 @@ def look_project_team_applicants(request, pk):
             project_entries = models.ProjectEntry.objects.filter(project=project).order_by('-status')
             is_author = True
 
-    #TODO: need pagination here
+    # TODO: need pagination here
     return render(request, 'core/project_entries.html',
                   {'project_entries': project_entries, 'is_author': is_author, 'project': project})
+
+
+# creating team, which automatically binds to the project
+def create_team_view(request, project_pk):
+    if request.method == 'POST':
+        form = CreateTeamForm(request.POST)
+        if form.is_valid():  #For some reason, form returned error cause of not finding attribute, despite being model form, so we're using cleaned data instead
+            team = models.Team(team_name=form.cleaned_data['team_name'], team_info=form.cleaned_data['team_info'],
+                               team_lfg_message=form.cleaned_data['team_lfg_message'], is_looking_for_group=form.cleaned_data['is_looking_for_group'], team_captain=request.user)
+            team.save()
+            if project_pk:
+                project = get_object_or_404(Project, pk=project_pk)
+                project.project_teams.add(team)
+                team.team_members.add(request.user)
+            return HttpResponseRedirect(
+                reverse('core:project_detail', args=[int(project.id)]))  # TODO: Вставить сюда team detail
+    else:
+        form = CreateTeamForm()
+        return render(request, 'core/team_form.html', {'form': form})
+
+
+#view checking if user is in the team, so we can choose, if we should show team chat or additional info
+def team_detailed_view(request, team_pk):
+    team = get_object_or_404(Team, pk=team_pk)
+    is_in_team = False
+    is_captain = False
+    if team.team_members.contains(team):  # you can do these checks in the template, if you prefer
+        is_in_team = True
+    if request.user == team.team_captain:
+        is_captain = True
+    return render(request, 'core/team_detail.html', {'team': team, 'is_in_team': is_in_team, 'is_captain': is_captain})

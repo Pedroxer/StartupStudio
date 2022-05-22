@@ -34,7 +34,7 @@
                                     class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
                         {% elif project_entry.status == 'acc' %}
                             <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
-                            <div class="regular_text">Ваша команда: У вас пока нет команды <a href="">Найти</a></div>
+                            <div class="regular_text">Ваша команда: У вас пока нет команды <a href="{% url 'core:project_teams' project.id %}">Найти</a></div>
                         {% elif project_entry.status == 'den' %}
                             <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
                         {% endif %}

@@ -11,9 +11,10 @@ urlpatterns = [
     path('login', RedirectView.as_view(url=reverse_lazy('accounts/login/')), name='login_core'),
     path('logout', views.logout_view, name='logout'),
     path('projects/<int:pk>/', views.project_detail_view, name='project_detail'),
-    path('projects/<int:pk>/teams', views.look_project_teams, name='project_teams'),  #
-    path('projects/<int:project_pk>/teams/create', views.project_detail_view, name='project_teams'),  # TODO: WIP And bottom too
-    path('projects/<int:project_pk>/teams/<int:team_pk>/applications', views.project_detail_view, name='project_teams'),
+    path('projects/<int:pk>/teams', views.look_project_teams, name='project_teams'),
+    path('projects/team/<int:team_pk>', views.team_detailed_view, name='team_detailed'), #basically a template for a team' page
+    path('projects/<int:project_pk>/teams/create', views.create_team_view, name='project_teams_create'),  # TODO: WIP And bottom too
+    path('projects/<int:project_pk>/teams/<int:team_pk>/applications', views.project_detail_view, name='project_teams_applications'),
     path('projects/<int:project_pk>/send_notice', views.send_notice, name='project_send_notice'),
     path('projects/<int:project_pk>/send_message/<str:team_pk>', views.send_message, name='project_send_message'),
     path('projects/<int:pk>/applicants', views.look_project_applicants_view, name='check_applicants_for_project'),

@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, DateInput
 
 from UserSystem.models import CustomUser
-from core.models import Project
+from core.models import Project, Team
 
 
 class NewUserForm(UserCreationForm):
@@ -64,4 +64,9 @@ class CreateProjectForm(ModelForm):
         return data
 
 
+class CreateTeamForm(ModelForm):
+    class Meta:
+        model = Team
+        fields = ['team_name', 'team_info', 'team_lfg_message', 'is_looking_for_group']
+        labels = {'team_name':'Название команды', 'team_info':'Информация о команде', 'is_looking_for_group':'Открывать ли команду для поиска участников', 'team_lfg_message':'Сообщение в канал поиска участников'}
 
