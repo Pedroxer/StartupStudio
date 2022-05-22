@@ -248,10 +248,13 @@ textarea{
 	width:25%;
 }
 
+.outer_chat_wrapper{
+	overflow: auto;
+}
+
 .message-container{
 	overflow: auto;
 	height: 88%;
-
 }
 
 .notice_board .Name{

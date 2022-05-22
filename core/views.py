@@ -1,9 +1,12 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.forms import DateInput
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic.base import View
 
 from core.models import Project, ProjectEntry, Team
 from django.shortcuts import render, redirect, get_object_or_404
@@ -45,8 +48,9 @@ def project_detail_view(request, pk):
         if users_entry or is_author:
             already_entered = True  # could've used approach with less lines in a controller, but using bool is just too convinient on a template
             general_messages = models.ProjectChatMessage.objects.filter(project=project)
+            team = Team.objects.filter(team_members=request.user).first()
     context = {'project': project, 'project_entry': users_entry, 'already_entered': already_entered,
-               'is_author': is_author, 'general_messages': general_messages}
+               'is_author': is_author, 'general_messages': general_messages, 'team': team}
     return render(request, 'core/project_detail.html', context)
 
 
@@ -282,7 +286,22 @@ def send_message(request, project_pk, team_pk):
             q = models.TeamChatMessage(team=team, user=request.user, pub_datetime=timezone.now(),
                                        message_text=request.POST['message_text'])
         q.save()
-    return HttpResponseRedirect(reverse('core:project_detail', args=(project_pk,)))
+    return redirect(reverse('core:project_detail', args=(project_pk,)))
+
+
+class AjaxGetMessages(LoginRequiredMixin, View):
+    def get(self, request, project_pk, channel_pk):
+        if channel_pk == "general":
+            project = models.Project.objects.filter(pk=project_pk).first()
+            messages = models.ProjectChatMessage.objects.filter(project=project)
+        else:
+            team = models.Team.objects.filter(pk=channel_pk).first()
+            messages = models.TeamChatMessage.objects.filter(team=team)
+        results = []
+        for message in messages:
+            result = [message.user.username, message.user.id, message.message_text, naturaltime(message.pub_datetime)]
+            results.append(result)
+        return JsonResponse(results, safe=False)
 
 
 def look_project_teams(request, pk):
@@ -331,11 +350,12 @@ def create_team_view(request, project_pk):
 
 
 #view checking if user is in the team, so we can choose, if we should show team chat or additional info
+@login_required
 def team_detailed_view(request, team_pk):
     team = get_object_or_404(Team, pk=team_pk)
     is_in_team = False
     is_captain = False
-    if team.team_members.contains(team):  # you can do these checks in the template, if you prefer
+    if team.team_members.contains(request.user):  # you can do these checks in the template, if you prefer
         is_in_team = True
     if request.user == team.team_captain:
         is_captain = True

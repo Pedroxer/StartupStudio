@@ -34,7 +34,7 @@
                                     class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
                         {% elif project_entry.status == 'acc' %}
                             <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
-                            <div class="regular_text">Ваша команда: У вас пока нет команды <a href="{% url 'core:project_teams' project.id %}">Найти</a></div>
+                            <div class="regular_text">Ваша команда: {% if team %} {{ team.team_name }} {% else %} У вас пока нет команды <a href="{% url 'core:project_teams' project.id %}">Найти</a> {% endif %}</div>
                         {% elif project_entry.status == 'den' %}
                             <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
                         {% endif %}
@@ -95,8 +95,8 @@
             <div class="chat_wrap">
                 <div class="chat_inner_container">
                     <div class="message_board">
-                        <div id="general-messages">
-                            <div class="message-container">
+                        <div id="general-messages" class="outer_chat_wrapper">
+                            <div class="message-container" id="general-messages-container">
                                 {% if general_messages %} {# TODO: swap this with ajax late #}
                                 {% for message in general_messages %}
                                     <div class="box">
@@ -110,9 +110,9 @@
                                     {% endif %}
                             </div>
                         </div>
-                        <div id="team-messages">
-                            <div class="message-container">
-                                {% for notice in project.projectnotice_set.all %}
+                        <div id="team-messages" class="outer_chat_wrapper">
+                            <div class="message-container" id="team-messages-container" >
+                                {% for message in team.teamchatmessage_set.all %}
                                     <div class="box">
                                         <div class="Name">{{ message.user.username }} {{ message.pub_datetime }}
                                             <p>{{ message.message_text }}</p>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                     <div id="messagewindow">
-                        <form name="f2" action="{% url 'core:project_send_message' project.id "general" %}" method="post">
+                        <form name="send_message_form" id="send_message_form" action="{% url 'core:project_send_message' project.id "general" %}" method="post">
                             {% csrf_token %}
                             <div id="sendcontainer"><textarea name="message_text" cols="50" rows="4"
                                                               placeholder="Написать новое объявление..."
@@ -145,16 +145,59 @@
                 var general_messages = document.getElementById("general-messages");
                 var team_messages = document.getElementById("team-messages")
                 var chat_groups = {'general': general_messages, 'team': team_messages}
+                var group_overflows = {'general': document.getElementById("general-messages-container"), 'team': document.getElementById("team-messages-container")}
+                var general_link = "{% url 'core:project_send_message' project.id "general" %}"
+                var links = {'general': general_link}
+                links['team'] = ""
+                {% if team %}
+                    var team_message_link = "{% url 'core:project_send_message' project.id team.id %}"
+                    links['team'] = team_message_link
+                {% endif %}
 
                 {# You can further automate it using Django templates adding additional groups to the dictionary #}
 
+                {# injecting javascripts if user have rights to receive a messages #}
+                {% if project_entry.status == 'acc' or is_author %}
+                    function getMessagesGeneral(){
+                        var doScroll = (group_overflows['general'].scrollTop >= 0.6 * group_overflows['general'].scrollHeight)
+                        console.log('Requesting JSON');
+                        $.getJSON('{% url 'core:ajax_get_messages' project.id 'general' %}', function(rowz){
+                          console.log('JSON', rowz);
+                          $('#general-messages-container').empty();
+                          for (var i = 0; i < rowz.length; i++){
+                              line = rowz[i]
+                              $('#general-messages-container').append(
+                                  ' <div class=box>'
+                                  '                                        <div class="Name">' + line[0] + " " + line[3] +
+                                  '                                            <p>' + line[2] + '</p>\n' +
+                                  '                                        </div>\n' +
+                                  '                                    </div>')
+                          }
+                          if (doScroll){
+                              group_overflows['general'].scrollTop = group_overflows['general'].scrollHeight;
+                          }
+                          setTimeout('getMessagesGeneral()', 4000)
+                        });
+
+                    }
+                    $(document).ready(function(){
+                        $.ajaxSetup({cache: false});
+                        getMessagesGeneral();
+                    })
+                {% endif %}
+
+
                 function openChatGroup(group) {
-                    console.log("buttonPressed" + group)
+
+                    console.log("buttonPressed" + group);
                     for (const [key, value] of Object.entries(chat_groups)) {
                         console.log(key, value);
                         value.style.display = "none";
                     }
                     chat_groups[group].style.display = "block";
+                    document.getElementById("send_message_form").action = links[group]
+
+                    group_overflows[group].scrollTop = group_overflows[group].scrollHeight;
                 }
             </script>
         {% endif %}
