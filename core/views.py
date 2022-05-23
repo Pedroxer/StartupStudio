@@ -8,7 +8,7 @@ from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.views.generic.base import View
 
-from core.models import Project, ProjectEntry, Team
+from core.models import Project, ProjectEntry, Team, TeamEntry
 from django.shortcuts import render, redirect, get_object_or_404
 
 from . import models
@@ -41,6 +41,7 @@ def project_detail_view(request, pk):
     already_entered = False
     is_author = False
     general_messages = None
+    team = None
     if request.user.is_authenticated:
         if project.project_authors.contains(request.user):
             is_author = True
@@ -308,28 +309,46 @@ class AjaxGetMessages(LoginRequiredMixin, View):
 
 def look_project_teams(request, pk):
     is_user_in_project = None
+    teams = None
     project = get_object_or_404(Project, pk=pk)
     if project.project_authors.contains(request.user) or project.project_participants.contains(request.user):
         is_user_in_project = True  # TODO: prorably better to just fill the variable
-    teams = project.project_teams.all()
+        teams = project.project_teams.all()
+
     return render(request, 'core/project_teams.html',
                   {'project': project, 'is_user_in_project': is_user_in_project, 'project_teams': teams})
 
 
 # TODO: bottom is not finished
-def look_project_team_applicants(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+def look_project_team_applicants(request, team_pk):
+    team = get_object_or_404(Team, pk=team_pk)
     is_author = False
-    project_entries = None
+    team_entries = None
 
     if request.user.is_authenticated:
-        if project.project_authors.contains(request.user):
-            project_entries = models.ProjectEntry.objects.filter(project=project).order_by('-status')
+        if team.team_captain == request.user:
+            team_entries = models.TeamEntry.objects.filter(team=team).order_by('-status')
             is_author = True
 
     # TODO: need pagination here
-    return render(request, 'core/project_entries.html',
-                  {'project_entries': project_entries, 'is_author': is_author, 'project': project})
+    return render(request, 'core/team_entries.html',
+                  {'team_entries': team_entries, 'is_author': is_author, 'team': team})
+
+
+#tempory solution refactor this, and initial change status view into one controller?
+#duplicated code ahead
+def team_change_status_event_entry_view(request, team_pk, entry_pk, new_status):
+    team_entry = get_object_or_404(TeamEntry, pk=entry_pk)
+    if new_status == 'accepted':
+        team_entry.status = 'acc'
+        team_entry.team.team_members.add(team_entry.user)
+    elif new_status == 'kicked':  # check if this causes any errors if it somehow gets called #UPD: apparenty, it does not
+        team_entry.team.team_members.remove(team_entry.user)
+        team_entry.status = 'den'
+    else:
+        team_entry.status = 'den'
+    team_entry.save()
+    return HttpResponseRedirect(reverse('core:project_teams_applications', args=(team_pk,)))
 
 
 # creating team, which automatically binds to the project
@@ -357,8 +376,23 @@ def team_detailed_view(request, team_pk):
     team = get_object_or_404(Team, pk=team_pk)
     is_in_team = False
     is_captain = False
+    team_application = models.TeamEntry.objects.filter(user=request.user, team=team).first()
+
     if team.team_members.contains(request.user):  # you can do these checks in the template, if you prefer
         is_in_team = True
     if request.user == team.team_captain:
         is_captain = True
-    return render(request, 'core/team_detail.html', {'team': team, 'is_in_team': is_in_team, 'is_captain': is_captain})
+
+    return render(request, 'core/team_detail.html', {'team': team, 'is_in_team': is_in_team, 'is_captain': is_captain, 'team_application': team_application})
+
+
+@login_required #we're using forms instead of submitting via url to prevent CRSF
+def join_team_view(request):
+    if request.user.is_authenticated:
+        team = get_object_or_404(Team, pk=request.POST['team_pk'])
+        if not models.TeamEntry.objects.filter(team=team, user=request.user).first():
+            q = models.TeamEntry(team=team, user=request.user)
+            q.save()
+    return HttpResponseRedirect(reverse('core:team_detailed', args=(request.POST['team_pk'],)))
+
+

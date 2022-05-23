@@ -52,10 +52,14 @@ class ProjectNotice(admin.ModelAdmin):
 class TeamChatMessage(admin.ModelAdmin):
     list_display = ('message_text', 'user', 'team')
 
+@admin.register(ProjectChatMessage)
+class TProjectChatMessage(admin.ModelAdmin):
+    list_display = ('message_text', 'user', 'project')
+
 
 admin.site.register(ProjectEntry)
 admin.site.register(ProjectResult)
-admin.site.register(ProjectChatMessage)
+
 
 
 

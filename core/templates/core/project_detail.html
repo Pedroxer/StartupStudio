@@ -34,7 +34,7 @@
                                     class="entry_status">Вы подали заявку на вступление на этот проект</span></div>
                         {% elif project_entry.status == 'acc' %}
                             <div>Статус заявки: <span class="entry_status">Заявка одобрена</span></div>
-                            <div class="regular_text">Ваша команда: {% if team %} {{ team.team_name }} {% else %} У вас пока нет команды <a href="{% url 'core:project_teams' project.id %}">Найти</a> {% endif %}</div>
+                            <div class="regular_text">Ваша команда: {% if team %} <a href="{% url 'core:team_detailed' team.id %}?project_link={% url 'core:project_detail' project.id %}">{{ team.team_name }}</a> {% else %} У вас пока нет команды <a href="{% url 'core:project_teams' project.id %}">Найти</a> {% endif %}</div>
                         {% elif project_entry.status == 'den' %}
                             <div>Статус заявки: <span class="entry_status">Заявка отклонена</span></div>
                         {% endif %}
@@ -141,17 +141,20 @@
 
             </div>
             <script>
-                var active_chat = "general"
+
                 //there should be a way to better organise all of that
-                var general_messages = document.getElementById("general-messages");
-                var team_messages = document.getElementById("team-messages")
-                var chat_groups = {'general': general_messages, 'team': team_messages}
-                var group_overflows = {'general': document.getElementById("general-messages-container"), 'team': document.getElementById("team-messages-container")}
-                var general_link = "{% url 'core:project_send_message' project.id "general" %}"
-                var receive_links = {'general':"{% url 'core:ajax_get_messages' project.id "general" %}"}
-                var links = {'general': general_link}
-                var current_url = general_link
+                {% if project_entry.status == 'acc' or is_author %}
+                var chat_groups = {'general': document.getElementById("general-messages"), 'team': document.getElementById("team-messages")}
+                var group_overflows = {'general': document.getElementById("general-messages-container"), 'team': document.getElementById("team-messages-container")} // dictionary containing message containers
+                //var general_link = "{% url 'core:project_send_message' project.id "general" %}"
+                var receive_links = {'general':"{% url 'core:ajax_get_messages' project.id "general" %}"}  //links used to receive messages
+                var links = {'general': "{% url 'core:project_send_message' project.id "general" %}"}    //links used to send messages
+
+                var active_chat = 'general'
+                var current_url = links[active_chat] //current send url
+
                 links['team'] = ""
+                {% endif %}
                 {% if team %}
                     var team_message_link = "{% url 'core:project_send_message' project.id team.id %}"
                     links['team'] = team_message_link
@@ -192,7 +195,6 @@
                         textbox.value = "";
                         $.post(current_url, {message_text: data, csrfmiddlewaretoken: CSRFtoken}, function(response){ /* success */ });
                     }
-
 
                 {% endif %}
                     $(document).ready(function(){

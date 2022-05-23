@@ -30,7 +30,7 @@ class Skill(models.Model):
         return self.skill_name
 
 
-#Depricated?
+#Deprecated?
 class EntryStatus(models.Model):
     entry_name = models.CharField(max_length=80)
 
@@ -143,8 +143,8 @@ class TeamEntry(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
-    ENTRY_STATUS = (('pen', 'Pending'), ('acc', 'Accepted'), ('den', 'Denied'))
-    status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='p',
+    ENTRY_STATUS = (('pen', 'Рассматривается'), ('acc', 'Принято'), ('den', 'Отклонено'))
+    status = models.CharField(max_length=3, choices=ENTRY_STATUS, blank=True, default='pen',
                               help_text="Current entry status")
 
     def __str__(self):

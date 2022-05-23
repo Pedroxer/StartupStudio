@@ -11,7 +11,7 @@
                 <a class="link_to" href="{% url 'core:project_detail' project.id %}">Вернуться к странице проекта  </a>
                 {% for team in project_teams %}
                     <article>
-                        <h2 class="entry_user_header">  {{ team.team_name }}  </h2>
+                        <h2 class="entry_user_header">  <a href="{% url 'core:team_detailed' team.id %}?project_link={% url 'core:project_teams' project.id %}"> {{ team.team_name }}  </a> </h2>
                         <div class="regular-text"> Описание: {{ team.team_lfg_message }} </div>
                         <div class="regular-text"> Капитан: {{ team.team_captain.get_name }} </div>
                         Текущий состав:
@@ -24,7 +24,7 @@
                 <p>Заявок или участников пока что нет.</p>
             {% endif %}
         {% else %}
-            <div class="error_warning"> Только автор проекта имеет право просматривать эту страницу </div>
+            <div class="error_warning"> Только участник проекта имеет право просматривать эту страницу </div>
         {% endif %}
         {% else %}
             <div class="error_warning"> Войдите, чтобы просматривать эту страницу </div>

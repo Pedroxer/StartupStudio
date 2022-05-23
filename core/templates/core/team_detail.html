@@ -4,7 +4,10 @@
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated %}
-        {% if is_in_team %} {# you can put additional info into this template for ex. chat, removing members #}
+         {# you can put additional info into this template for ex. chat, removing members #}
+                {% if request.GET.project_link %}
+                    <div><a href="{{ request.GET.project_link }}"> Вернуться к проекту </a></div>
+                {% endif %}
                     <article>
                         <h2 class="entry_user_header">  {{ team.team_name }}  </h2>
                         <div class="regular-text"> Описание: {{ team.team_lfg_message }} </div>
@@ -13,10 +16,22 @@
                         {% for member in team.team_members.all %}
                             <div class="regular-text"> <a href=""> {{ member.get_name }} </a> </div>
                             {% endfor %}
-                    </article>
-        {% else %}
-            <div class="error_warning"> Только участник команды имеет право просматривать эту страницу </div>
+                        {% if is_in_team %} {# use this to display additional information for team members #}
+                            Вы в команде
+                            {% if is_captain %}
+                                <div><a href="{% url 'core:project_teams_applications' team.id %}{% if request.GET.project_link %}?project_link={{ request.GET.project_link }} {% endif %}"> Перейти к заявкам </a></div>
+                            {% endif %}
+                        {% else %}
+                             {% if team_application %}
+                                  <div class="regular_text">Статус заявки: {{ team_application.get_status_display }}</div>
+                                {% else %}
+                             <div class="error_warning"> Отправить заявку в команду </div>
+                            <form name="join_team" action="{% url 'core:join_team' %}" method="post">{% csrf_token %}<input type="hidden" id="team_pk" name="team_pk" value="{{ team.id }}"><input type="submit" value="Вступить"></form></form>
+                        {% endif %}
+
         {% endif %}
+                    </article>
+
         {% else %}
             <div class="error_warning"> Войдите, чтобы просматривать эту страницу </div>
     {% endif %}

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'UserSystem.apps.UsersystemConfig',
     'NewsFeed.apps.NewsfeedConfig',
     'EventCalendar.apps.EventcalendarConfig',
+    'core.apps.CoreConfig',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +63,7 @@ ROOT_URLCONF = 'StartupStudio.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "StartupStudio", "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,25 +82,27 @@ WSGI_APPLICATION = 'StartupStudio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
-    }
-}
+#sqllite3 settings
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': 'db.sqlite3',
+#   }
+#}
 
 
 #postgres settings:
-#DATABASES = {
-#    'default': {
-#       'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'django_db',
-#        'USER': 'postgres',
-#        'PASSWORD': 'INSERTYOURPASSWORDHERE',
-#        'HOST': '127.0.0.1',
-#        'PORT': '5432',
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django_db',
+        'USER': 'postgres',
+        'PASSWORD': '01160414St',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
 
 
 # Password validation
@@ -121,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -139,3 +145,25 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/news' #Redirecting after logging in
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #Using development mail backend
+#new mail will go straight to the console
+#in order to use mail you need to setup mail backend, here's how: https://docs.djangoproject.com/en/2.0/topics/email/
+
+
+DATE_INPUT_FORMATS = [
+    '%d-%m-%Y',  # '25-10-2006'
+    '%d.%m.%Y',  # '25.10.2006'
+    '%d/%m/%Y',  # '25/10/2006'
+    '%d/%m/%y',  # '25/10/06'
+    '%b %d %Y',  # 'Oct 25 2006'
+    '%b %d, %Y',  # 'Oct 25, 2006'
+    '%d %b %Y',  # '25 Oct 2006'
+    '%d %b, %Y',  # '25 Oct, 2006'
+    '%B %d %Y',  # 'October 25 2006'
+    '%B %d, %Y',  # 'October 25, 2006'
+    '%d %B %Y',  # '25 October 2006'
+    '%d %B, %Y',  # '25 October, 2006'
+]
