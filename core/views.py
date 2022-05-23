@@ -89,7 +89,7 @@ def logout_view(request):
 
 
 # deprecated
-def login_view(request):  ##Это все надо переделать через встроенные view
+def login_view(request):  ##Deprecated, as it was all remade with built-in templates, but could be usefull in the future for rest API
     if request.method == "POST":
         user = authenticate(username='Will', password='hah')
         if user is not None:
@@ -110,7 +110,6 @@ class ProjectCreate(CreateView):
 
 
 #
-
 # swap with a custom form actually, so I can actually save user info as well
 
 
@@ -289,6 +288,9 @@ def send_message(request, project_pk, team_pk):
     return redirect(reverse('core:project_detail', args=(project_pk,)))
 
 
+#Ajax way to get full message history temporarry solutions for proof of concept
+#TODO: Will become bloated in the future, should be refactored into returning only finite array of messages
+#e.x. pagination of messages?
 class AjaxGetMessages(LoginRequiredMixin, View):
     def get(self, request, project_pk, channel_pk):
         if channel_pk == "general":
