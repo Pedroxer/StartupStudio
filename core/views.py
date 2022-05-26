@@ -134,11 +134,12 @@ def create_project_view(request):
     if request.method == 'POST':
         form = CreateProjectForm(request.POST)
         if form.is_valid():
-            project = models.Project(project_name=form.project_name, project_info=form.project_info,
-                                     event_type=form.event_type, direction_type=form.direction_type,
-                                     project_start=form.project_start, project_end=form.project_end)
-            project.project_authors.add(request.user)
+            project = models.Project(project_name=form.cleaned_data['project_name'], project_info=form.cleaned_data['project_info'],
+                                     event_type=form.cleaned_data['event_type'], direction_type=form.cleaned_data['direction_type'],
+                                     project_start=form.cleaned_data['project_start'], project_end=form.cleaned_data['project_end'])
             project.save()
+            project.project_authors.add(request.user)
+
             return HttpResponseRedirect(reverse('core:project_detail', args=[int(project.id)]))
     else:
         form = CreateProjectForm()

@@ -22,7 +22,7 @@ class EventPage(models.Model):
     entry_deadline = models.DateTimeField('entry deadline')
     event_organiser = models.CharField(max_length=60)
     event_text = models.TextField(max_length=2000)
-    event_prize = models.CharField(max_length=200)
+    event_prize = models.CharField(max_length=200) #temporary solution, before someone implements markdown
     event_image = models.CharField(max_length=300)
     event_tags = models.ManyToManyField(EventTag) #Tag Fields following Many to Many rules
     event_main_text_culling = models.IntegerField(  # providing minimal and max values for text Culling

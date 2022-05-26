@@ -66,7 +66,7 @@
                                     {% csrf_token %}
                                     <div id="sendcontainer"><textarea name="notice_text" cols="50" rows="4"
                                                                       placeholder="Написать новое объявление..."
-                                                                      id="chatbox"> </textarea>
+                                                                      id="send_notice_bos"> </textarea>
                                         <div id="buttoncontainer">
                                             <input type="submit" name="button" value="Отправить" id="sendbutton">
                                         </div>
@@ -192,6 +192,7 @@
                         var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
                         var textbox = document.getElementById("chatbox");
                         var data = textbox.value;
+                        console.log("sending ajax message: "+data)
                         textbox.value = "";
                         $.post(current_url, {message_text: data, csrfmiddlewaretoken: CSRFtoken}, function(response){ /* success */ });
                     }
