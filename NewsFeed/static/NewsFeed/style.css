@@ -327,3 +327,7 @@ textarea{
 .message-container .box{
 	margin-bottom: 20px;
 }
+
+#current_page_num{
+	color: #4CAF50;
+}

@@ -48,15 +48,14 @@ class DetailView(generic.DetailView):
 
 @login_required
 def send_comment(request, article_id):
-    #user = get_object_or_404(CustomUser, pk=request.POST['user_id']) #TODO: check if this works: user_id=self.request.user
     if request.user.is_authenticated:
         article = get_object_or_404(NewsArticle, pk=article_id)
         q = Comment(article=article, user_id=request.user, pub_datetime=timezone.now(), comment_text=request.POST['comment_text'])
-        q.save() #TODO: make unauthorised users to not be able to send comments DONE
+        q.save()
     return HttpResponseRedirect(reverse('NewsFeed:detail', args=(article_id,)))
 
 
-def index_using_culling(request, page_num='1'): #Возможно, это можно переделать через ListView c Пейджингом
+def index_using_culling(request, page_num='1'):
     all_articles = NewsArticle.objects.filter(pub_date__lte=timezone.now())
     articles_count = all_articles.count()
     latest_article_list = all_articles[(int(page_num) - 1) * 5:int(page_num) * 5]
@@ -66,10 +65,24 @@ def index_using_culling(request, page_num='1'): #Возможно, это мож
     context = {'latest_article_list': latest_article_list}
 
     total_pages = int(math.ceil(articles_count / 5))
-    page_numbers = [x for x in range(1, total_pages + 1)][:7] #manual pagination
-    if total_pages > 8:                                       #TODO: fix pagination for 10 pages and mode (Maybe use auto pagination as well?)
+
+    slice_radius = 4
+    if page_num > slice_radius:
+        first_slice = int(page_num)-slice_radius-1
+    else:
+        first_slice = 1
+    second_slice = int(page_num)+slice_radius
+
+    page_numbers = [x for x in range(1, total_pages + 1)][first_slice:second_slice]
+
+    #adding first and last page if they are not present already
+    if page_numbers[0] is not 1:
+        page_numbers.insert(0, 1)
+    if page_numbers[-1] is not total_pages:
         page_numbers.append(total_pages)
+
     context['page_numbers'] = page_numbers
+    context['current_page'] = page_num
 
     return render(request, 'NewsFeed/index.html', context)
 
