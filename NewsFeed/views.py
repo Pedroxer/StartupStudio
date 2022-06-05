@@ -67,7 +67,7 @@ def index_using_culling(request, page_num='1'):
     total_pages = int(math.ceil(articles_count / 5))
 
     slice_radius = 4
-    if page_num > slice_radius:
+    if int(page_num) > slice_radius:
         first_slice = int(page_num)-slice_radius-1
     else:
         first_slice = 1
