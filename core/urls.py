@@ -51,3 +51,10 @@ urlpatterns += [
     path('projects/<int:pk>/delete', views.ProjectDelete.as_view(), name='project_delete'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]
+
+urlpatterns+=[
+    path('myprofile/', views.my_profile_view, name='my_profile'), #eto zaglushka
+    path('projects/<int:pk>/finish', views.finish_project_view, name='finish_project'),
+]
+
+

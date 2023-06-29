@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +43,8 @@ INSTALLED_APPS = [
     'EventCalendar.apps.EventcalendarConfig',
     'core.apps.CoreConfig',
     'crispy_forms',
+    'markdownx',
+    'crispy_bootstrap4',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -55,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 AUTH_USER_MODEL = 'UserSystem.CustomUser'
 
@@ -84,12 +88,12 @@ WSGI_APPLICATION = 'StartupStudio.wsgi.application'
 
 #sqllite3 settings
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': 'db.sqlite3',
 #   }
-#}
+# }
 
 
 #postgres settings:
@@ -97,8 +101,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django_db',
-        'USER': 'postgres',
-        'PASSWORD': '01160414St',
+        'USER': 'root',
+        'PASSWORD': 'secret',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -140,6 +144,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

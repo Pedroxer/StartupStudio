@@ -7,8 +7,10 @@
         {% if is_user_in_project %}
             {% if project_teams %}
                 <h1> Команды проекта {{ project.project_name }}:</h1>
-                <a class="link_to" href="{% url 'core:project_teams_create' project.id %}"> Создать команду, привязанную к проекту </a>
-                <a class="link_to" href="{% url 'core:project_detail' project.id %}">Вернуться к командам проекта  </a>
+                <div class="flex-space-between" style="width: 800px; margin: auto">
+                <div class="shadebox"><a class="link_to" href="{% url 'core:project_teams_create' project.id %}"> Создать команду, привязанную к проекту </a></div>
+                <div class="shadebox"><a class="link_to" href="{% url 'core:project_detail' project.id %}">Вернуться к командам проекта  </a></div>
+                </div>
                 {% for team in project_teams %}
                     <article>
                         <h2 class="entry_user_header">  <a href="{% url 'core:team_detailed' team.id %}?project_link={% url 'core:project_teams' project.id %}"> {{ team.team_name }}  </a> </h2>

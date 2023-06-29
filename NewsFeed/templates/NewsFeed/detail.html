@@ -1,11 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}
 <title>Новости</title>
 {% endblock %}
 {% block content %}
+    {{ form.media }}
 <article>
     <h1>{{ newsarticle.news_title }}</h1>
-    <div>{{ newsarticle.news_text }}</div>
+    <div>{{ newsarticle.formatted_markdown|safe}}</div>
     <div class="tag_container">
     {% for tag in newsarticle.tags.all %}
             <p class="tag" style="display:inline;"><a href="{% url 'NewsFeed:news_tag_filtered' tag.tag_name %}">#{{ tag.tag_name }}</a></p>

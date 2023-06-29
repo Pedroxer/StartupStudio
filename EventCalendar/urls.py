@@ -1,4 +1,4 @@
-from django.urls import  path
+from django.urls import path, include
 
 from . import views
 
@@ -9,6 +9,8 @@ urlpatterns = [
     path('event_tag=<str:tag_name>/', views.tag_filtered, name='events_tag_filtered'),
     path('event/<int:event_id>/sendcomment', views.send_comment, name='send_comment'),
 ]
+
+
 
 #you can also do like that: event/<int:event_id>/<int:some_param>/ to intercept multiple parameters
 #in here: event_id and some_param are the names of the variables and as such they should be

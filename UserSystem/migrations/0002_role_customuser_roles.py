@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name='customuser',
+            model_name='CustomUser',
             name='roles',
             field=models.ManyToManyField(to='UserSystem.Role'),
         ),

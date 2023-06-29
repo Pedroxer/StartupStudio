@@ -21,9 +21,10 @@
                 <div>Начало: {{ project.project_start }}</div>
                 <div>Конец: {{ project.project_end }}</div>
                 <div>Статус проекта: {{ project.get_project_status_display }}</div>
+                <div class="flex-space-between" style="padding-top: 10px;"><div class="shadebox">
+                    <a href="{% url 'core:accept_project_mod' project.id %}"> Принять проект </a></div>
+                <div class="shadebox"><a href="{% url 'core:deny_project_mod' project.id %}"> Отклонить проект </a></div></div>
 
-                <div><a href="{% url 'core:accept_project_mod' project.id %}"> Принять проект </a></div>
-                <div><a href="{% url 'core:deny_project_mod' project.id %}"> Отклонить проект </a></div>
                 <p>Опубликовано: {{ project.pub_date }}</p>
 
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

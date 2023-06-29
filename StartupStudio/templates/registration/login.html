@@ -3,13 +3,12 @@
 {% block content %}
 
 {% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
+  <p align="center" >Логин или пароль некорректен, попробуйте снова</p>
 {% endif %}
 
 {% if next %}
   {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
+    <p>У вас нет прав доступа к этой странице, чтобы перейти дальше, войдите в аккаунт, у которого есть доступ</p>
   {% else %}
 
   {% endif %}
@@ -32,7 +31,7 @@
 </tr>
 </table>
 
-<input type="submit" value="login" />
+<input type="submit" value="Войти" style="width: 100px; height: 30px; margin-top: 10px;" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 

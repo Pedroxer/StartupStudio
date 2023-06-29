@@ -6,11 +6,14 @@
     {% if tag %}
         <p align="center"><a href="{% url 'NewsFeed:news' %}">Сбросить фильтры</a></p>
     {% endif %}
+    {% if perms.NewsFeed.can_add_news_article %}
+        <div class="shadebox centered-container"><a href="{% url 'NewsFeed:create_article' %}"> Добавить новость </a></div>
+    {% endif %}
 {% if latest_article_list %}
     {% for news_article in latest_article_list %}
         <article><h2><a href="{% url 'NewsFeed:detail' news_article.id %}">{{ news_article.news_title }}</a></h2>
         <div class="flex-body" style="display: flex; justify-content: space-between">
-            <div class="articleMainBody">{{news_article.news_text}}  </div>
+            <div class="articleMainBody">{{news_article.formatted_markdown|safe}}  </div>
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" style="height: 256px; width: 256px; padding-left: 50px;">
         </div>
         <div class="commentsCounter">

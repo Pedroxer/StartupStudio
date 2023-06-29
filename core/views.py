@@ -139,8 +139,8 @@ def create_project_view(request):
                                      project_start=form.cleaned_data['project_start'], project_end=form.cleaned_data['project_end'])
             project.save()
             project.project_authors.add(request.user)
-
             return HttpResponseRedirect(reverse('core:project_detail', args=[int(project.id)]))
+
     else:
         form = CreateProjectForm()
         return render(request, 'core/project_form.html', {'form': form})
@@ -303,7 +303,7 @@ class AjaxGetMessages(LoginRequiredMixin, View):
             messages = models.TeamChatMessage.objects.filter(team=team)
         results = []
         for message in messages:
-            result = [message.user.username, message.user.id, message.message_text, naturaltime(message.pub_datetime)]
+            result = [message.user.get_name(), message.user.id, message.message_text, naturaltime(message.pub_datetime)]
             results.append(result)
         return JsonResponse(results, safe=False)
 
@@ -397,3 +397,17 @@ def join_team_view(request):
     return HttpResponseRedirect(reverse('core:team_detailed', args=(request.POST['team_pk'],)))
 
 
+def my_profile_view(request):
+    return render(request, 'core/my_profile.html', context=None)
+
+
+def finish_project_view(request, pk):
+    is_user_in_project = None
+    teams = None
+    project = get_object_or_404(Project, pk=pk)
+    if project.project_authors.contains(request.user) or project.project_participants.contains(request.user):
+        is_user_in_project = True  # TODO: prorably better to just fill the variable
+        teams = project.project_teams.all()
+
+    return render(request, 'core/project_finish.html',
+                  {'project': project, 'is_user_in_project': is_user_in_project, 'project_teams': teams})

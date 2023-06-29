@@ -6,8 +6,8 @@
     <article>
         <div class="main-container">
             <div class="main-info-container">
-                <h1>{{ project.project_name }}</h1>
-                <h2>Тип мероприятия: {{ project.event_type }} </h2>
+                <h2>{{ project.project_name }}</h2>
+                <h3>Тип мероприятия: {{ project.event_type }} </h3>
                 <div>{{ project.project_info }}</div>
                 <div>Направление: {{ project.direction_type }}</div>
                 <div>Навыки для участия:</div>
@@ -46,6 +46,7 @@
                     {% endif %}
                 {% endif %}
                 <p>Опубликовано: {{ project.pub_date }}</p>
+                <div class="shadebox"> Определить результаты проекта </div>
             </div>
             <div class="notice_board_outer">
                 Объявления:
@@ -132,7 +133,7 @@
                                                               id="chatbox"> </textarea>
                                 <div id="buttoncontainer">
 
-                                    <button onclick="sendMessageAjax()" type="button">Отправить ajax</button>
+                                    <button onclick="sendMessageAjax()" type="button" id="send-message-button">Отправить</button>
                                 </div>
                                 <textarea style="display: none;" name="user_id">1</textarea>
                             </div>

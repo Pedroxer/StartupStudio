@@ -11,13 +11,12 @@
         <article>
             <h2><a href="{% url 'EventCalendar:detail' event_article.id %}">{{ event_article.event_title }}</a></h2>
         <div class="articleMainBody" style="display: flex; justify-content: space-between;">
-            <div class="article_text">
+            <div class="article_text event_container">
                 <p> Конец приема заявок: {{ event_article.entry_deadline }} </p>
                 <p> Начало: {{ event_article.start_date }} </p>
                 <p> Конец: {{ event_article.ending_date }} </p>
             <p> Организатор: {{ event_article.event_organiser  }}</p>
-            <p> {{event_article.event_text}} </p>
-            <p> Призовой фонд: {{ event_article.event_prize }}</p>
+            <p> {{event_article.formatted_markdown | safe}} </p>
             </div>
             <div class="article_image">
             <img src="{{ event_article.event_image }}" style="max-height: 256px; max-width: 400px; padding-left: 50px;">

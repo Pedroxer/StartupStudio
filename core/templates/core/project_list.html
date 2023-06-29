@@ -4,19 +4,21 @@
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated %}
-    <a class="create_project_button" style="color: white" href="{% url 'core:project_create' %}"> Click here to create an event </a> {# TODO: make check permissions here #}
-    {% if perms.core.can_moderate_projects %}<a class="go_to_button" style="color: white" href="{% url 'core:new_pending_projects_mod' %}"> Click here moderate new projects </a>
+    <div class="shadebox"><a class="create_project_button" href="{% url 'core:project_create' %}" > Нажмите, чтобы создать проект </a></div> {# TODO: make check permissions here #}
+    {% if perms.core.can_moderate_projects %}<div class="shadebox" style="margin-top:10px;"><a class="go_to_button" style="color: black;" href="{% url 'core:new_pending_projects_mod' %}"> Нажмите, чтобы просмотреть заявки на проекты </a></div>
     {% endif %}
     {% else %}
-        <div>Войдите, чтобы добавить проект</div>
+        <!--<div>Войдите, чтобы добавить проект</div>-->
     {% endif %}
     {% if object_list %}
         {% for project in object_list %}
-            <article>
+            <article class="project_article thin-container">
                 <h2><a href="{% url 'core:project_detail' project.id %}">{{ project.project_name }}</a></h2>
-                <h2>Тип мероприятия: {{ project.event_type }} </h2>
-                <div>{{ project.project_info }}</div>
-                <div>Направление: {{ project.direction_type }}</div>
+                <h3>Тип мероприятия: {{ project.event_type }} </h3>
+                <div class="article_body">
+                <div class="left-container">
+                <p>{{ project.project_info }}</p>
+                <p>Направление: {{ project.direction_type }}</p>
                 <p>Навыки для участия: </p>
                 <div class="tag_container"> {% for skill in project.project_skills.all %}
                     <div class="tag">{{ skill.skill_name }}</div>
@@ -29,6 +31,11 @@
                 <p>Статус проекта: {{ project.get_project_status_display }}</p>
                 <p>Опубликовано: {{ project.pub_date }}</p>
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                </div>
+                <div class="right-container">
+                    <img src="https://i.pinimg.com/736x/2b/81/a8/2b81a830e7be62b2437a493d2867c3d8.jpg" style="height: 256px; width: 256px; padding-left: 50px;">
+                </div>
+                </div>
             </article>
         {% endfor %}
     {% else %}

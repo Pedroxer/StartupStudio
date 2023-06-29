@@ -2,6 +2,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
+
 from UserSystem.models import CustomUser
 
 
@@ -17,8 +20,8 @@ class Tag(models.Model):
 
 class NewsArticle(models.Model):
     news_title = models.CharField(max_length=200) #Rename news_title to article_title for better clarity
-    pub_date = models.DateField('date published')
-    news_text = models.TextField(max_length=80000) #Rename news_text to article_text for better clarity
+    pub_date = models.DateField('date published', default=timezone.now())
+    news_text = MarkdownxField() #Rename news_text to article_text for better clarity
     tags = models.ManyToManyField(Tag) #Tag Fields following Many to Many rules
     news_main_text_culling = models.IntegerField(  # providing minimal and max values for text Culling
         default=800,
@@ -32,6 +35,9 @@ class NewsArticle(models.Model):
 
     def get_absolute_url(self):
         return reverse('NewsFeed:detail', args=[int(self.id)])
+
+    def formatted_markdown(self):
+        return markdownify(self.news_text)
 
     def __str__(self):
         return self.news_title

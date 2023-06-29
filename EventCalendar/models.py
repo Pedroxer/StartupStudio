@@ -3,6 +3,8 @@ import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 
 from UserSystem.models import CustomUser
 
@@ -21,9 +23,8 @@ class EventPage(models.Model):
     ending_date = models.DateTimeField('ending date')
     entry_deadline = models.DateTimeField('entry deadline')
     event_organiser = models.CharField(max_length=60)
-    event_text = models.TextField(max_length=2000)
-    event_prize = models.CharField(max_length=200) #temporary solution, before someone implements markdown
-    event_image = models.CharField(max_length=300)
+    event_text = MarkdownxField()
+    event_image = models.CharField('link to the picture used in the post', max_length=400, null=True, blank=True)
     event_tags = models.ManyToManyField(EventTag) #Tag Fields following Many to Many rules
     event_main_text_culling = models.IntegerField(  # providing minimal and max values for text Culling
         default=800,
@@ -43,6 +44,9 @@ class EventPage(models.Model):
     def was_published_recently(self):
         now = timezone.now()
         return now - datetime.timedelta(days=4) <= self.pub_date <= now
+
+    def formatted_markdown(self):
+        return markdownify(self.event_text)
 
 
 class EventComment(models.Model):

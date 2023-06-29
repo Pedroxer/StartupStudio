@@ -1,12 +1,13 @@
 import math
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
+from NewsFeed.forms import CreateNewsForm
 from NewsFeed.models import NewsArticle, Comment
 from UserSystem.models import CustomUser
 
@@ -76,10 +77,11 @@ def index_using_culling(request, page_num='1'):
     page_numbers = [x for x in range(1, total_pages + 1)][first_slice:second_slice]
 
     #adding first and last page if they are not present already
-    if page_numbers[0] is not 1:
-        page_numbers.insert(0, 1)
-    if page_numbers[-1] is not total_pages:
-        page_numbers.append(total_pages)
+    if len(page_numbers):
+        if page_numbers[0] is not 1:
+            page_numbers.insert(0, 1)
+        if page_numbers[-1] is not total_pages:
+            page_numbers.append(total_pages)
 
     context['page_numbers'] = page_numbers
     context['current_page'] = page_num
@@ -106,3 +108,16 @@ def tag_filtered(request, tag_name, page_num='1'):
     return render(request, 'NewsFeed/index.html', context)
 
 #TODO: Medium priority: make tag reset button (Should be easy really, use ?=next) DONE
+
+@permission_required('core.can_create_news')
+def create_article_view(request):
+    if request.method == 'POST':
+        form = CreateNewsForm(request.POST)
+        if form.is_valid():
+            article = NewsArticle(news_title=form.cleaned_data['news_title'], news_text=form.cleaned_data['news_text'], author=request.user)
+            article.save()
+            article.tags.set(form.cleaned_data['tags'])
+            return HttpResponseRedirect(reverse('NewsFeed:detail', args=[int(article.id)]))
+    else:
+        form = CreateNewsForm()
+        return render(request, 'NewsFeed/article_form.html', {'form': form})
