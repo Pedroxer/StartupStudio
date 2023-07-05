@@ -17,6 +17,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 
+from .models import CustomUser
+from django.core.exceptions import PermissionDenied
 
 def index(request):
     return HttpResponse("Hello, world. You're at the core's index.")
@@ -398,8 +400,21 @@ def join_team_view(request):
 
 
 def my_profile_view(request):
-    return render(request, 'core/my_profile.html', context=None)
+    user = models.CustomUser.objects.filter(username=request.user)
+    
+    last_name ="jh"
+    first_name="lkj"
+    if request.user.is_authenticated:
+        
+        username =user.username
+        last_name = user.last_name
+        first_name = user.first_name
+    else:
+        raise PermissionDenied()
 
+    return render(request, 'core/my_profile.html')
+def my_profile_change_view(request):
+    return render(request,'core/my_profile_change.html')
 
 def finish_project_view(request, pk):
     is_user_in_project = None

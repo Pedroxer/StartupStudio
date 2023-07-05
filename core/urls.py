@@ -54,6 +54,7 @@ urlpatterns += [
 
 urlpatterns+=[
     path('myprofile/', views.my_profile_view, name='my_profile'), #eto zaglushka
+    path('myprofile/change', views.my_profile_change_view, name='my_profile_change'),
     path('projects/<int:pk>/finish', views.finish_project_view, name='finish_project'),
 ]
 
