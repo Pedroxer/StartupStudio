@@ -6,7 +6,7 @@ from . import views
 
 app_name = 'core'
 urlpatterns = [
-    path('', views.index, name='index'),
+    #path('', views.index, name='index'),
     path('register', views.register_request, name='register'),
     path('login', RedirectView.as_view(url=reverse_lazy('accounts/login/')), name='login_core'),
     path('logout', views.logout_view, name='logout'),
@@ -53,7 +53,7 @@ urlpatterns += [
 ]
 
 urlpatterns+=[
-    path('myprofile/', views.my_profile_view, name='my_profile'), #eto zaglushka
+    #path('myprofile/', views.my_profile, name='my_profile'), #eto zaglushka
     path('myprofile/change', views.my_profile_change_view, name='my_profile_change'),
     path('projects/<int:pk>/finish', views.finish_project_view, name='finish_project'),
 ]

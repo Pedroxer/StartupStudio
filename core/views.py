@@ -20,8 +20,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from .models import CustomUser
 from django.core.exceptions import PermissionDenied
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the core's index.")
+# def index(request):
+#     return HttpResponse("Hello, world. You're at the core's index.")
 
 
 def event(request):

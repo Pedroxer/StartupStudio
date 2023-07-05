@@ -25,6 +25,7 @@ urlpatterns = [
     path('event_news/', include('EventCalendar.urls')),
     path('', RedirectView.as_view(url='/news/', permanent=True)),
     path('c/', include('core.urls')),
+    path('MyProfile/', include('MyProfile.urls')),
 ]
 
 urlpatterns += [

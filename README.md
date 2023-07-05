@@ -14,11 +14,11 @@
 
 - Установить драйвер psycopg2 для postrgesql
 ```
-pip install psycopg2
+pip install psycopg2-binary
 ```
 - Установить markdownx
 ```
-pip install markdownx
+pip install django-markdownx
 ```
 - Установить crispy-forms 
 ```
