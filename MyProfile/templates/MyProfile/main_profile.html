@@ -1,1 +1,75 @@
-{% extends base.html %}
+{% extends "base.html" %}
+{% block title %}
+<title>Мой профиль</title>
+{% endblock %}
+{% block content %}
+<article class="thin-container">
+    <div class="main-container centered-container">
+        <div class="main-info-container profile-container ">
+            <div> ФИО: {{first_name}} {{last_name}} {{surname}}<sup>cтатус: {{email}}</sup></div>
+            <div>ФОТО {{email}}</div>
+            <div>Дата рождения: {{email}}</div>
+            <div>Почта: {{email}}</div>
+            <div>Контакты:
+            </div>
+            <div>Список проектов: {{email}}</div>
+            <a href="">История ответов на заявки</a>
+            <div>Резюме:
+            </div>
+            <div>Дополнительная информация: {{email}}</div>
+            <div>Ссылки: {{email}}</div>
+
+            <div>В зависимости от статуса:
+                {% if СТУДЕНТ %}
+                <div>Навпрадение: {{email}}</div>
+                <div>Год поступления:</div>
+                {% elif ПРЕПОДАВАТель %}
+                <div>Должность: {{email}}</div>
+                <div>Подразделение: </div>
+                {% elif КОМПАНИЯ%}
+                <div>Должность: {{email}}</div>
+                <div>Название:</div>
+                <div><a href="">Ссылка на сайт</a></div>
+                <div>Информация о компании:</div>
+                {% else %}
+
+                {% endif %}
+
+
+
+                <!-- <img src="https://i.pinimg.com/736x/2b/81/a8/2b81a830e7be62b2437a493d2867c3d8.jpg"
+                style="height: 256px; width: 256px; padding-left: 50px;"> -->
+
+
+                <!-- <div class="profile_projects_container">Прошедшие проекты:
+                {% for obj in user_projects_list %}
+                <div class="shadebox previous_projects">
+                    <div class="left-container">
+                        <p>{{obj.hack_name}}</p>
+                        <p>Команда: {{obj.team}}</p>
+                        <p>Место: {{obj.place}}</p>
+                    </div>
+                    {% for term in obj.terms %}
+                    <div class="right-container">
+                        <div class="tag_container">
+                            <div class="tag">term</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div> -->
+
+                <br><input type="submit" name="create" value="Редактировать" />
+
+                <input type="submit" name="delete" value="Удалить провиль" /><br>
+
+                <button onclick="window.location.href = '../my_form.html'">Редактировать</button>
+
+            </div>
+        </div>
+
+
+</article>
+
+{% endblock %}

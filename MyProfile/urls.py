@@ -10,5 +10,5 @@ from . import views
 
 app_name = 'MyProfile'
 urlpatterns = [
-    path('', views.main_profile, name='my_profile'),
+    path('', views.main_profile, name='main_profile'),
 ]
