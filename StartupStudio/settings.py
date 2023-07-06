@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'markdownx',
     'crispy_bootstrap4',
+    'MyProfile'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -101,8 +102,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Ek301148',
+        'USER': 'root',
+        'PASSWORD': 'secret',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
