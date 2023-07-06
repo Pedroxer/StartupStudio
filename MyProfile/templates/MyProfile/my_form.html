@@ -4,37 +4,35 @@
 {% endblock %}
 {% block content %}
 <form method="post" action="create">
-    {% csrf_token %}
-    Фамилия<input required type="text" name="firstname" value="{{phot.id}}" /> <br>
-    Имя<input required type="text" name="lastname" value="{{phot.count_like}}" /><br>
-    Отчество<input required type="text" name="surname" value="{{phot.id}}" /><br>
-    Статус <select required  name="status_id">
-        <option disabled>Выберите статус</option>
-        <option value="student">Студент</option>
-        <option value="teach">Преподаватель</option>
-        <option value="company">Представитель компании</option>
-    </select><br>
+{% csrf_token %}
+Фамилия<input required type="text" name="firstname" value="{{phot.id}}" /> <br>
+Имя<input required type="text" name="lastname" value="{{phot.count_like}}" /><br>
+Отчество<input required type="text" name="sername" value="{{phot.id}}" /><br>
+Статус <select required name="status_id">
+<option disabled>Выберите статус</option>
+<option value="student">Студент</option>
+<option value="teach">Преподаватель</option>
+<option value="company">Представитель компании</option>
+</select><br>
 
-    Фото:<input type="file" name="photo" multiple accept="image/*,image/jpeg"><br>
-    Дата рождения: <input type="date" name="birth_date" /><br>
-    Почта: <input type="email" name="email" value="{{phot.count_like}}" /><br>
-    Контакты: <input type="text" name="contact" value="{{phot.id}}" /><br>
-    Резюме: <input type="text" name="skills" value="{{phot.id}}" /><br>
-    Дополнительная информация:<input type="text" name="info" value="{{phot.id}}" /><br>
-    Ссылки:<input type="text" name="links" value="{{phot.id}}" /><br>
+Фото:<input type="file" name="photo" multiple accept="image/*,image/jpeg"><br>
+Дата рождения: <input type="date" name="birth_date" /><br>
+Почта: <input type="email" name="email" value="{{phot.count_like}}" /><br>
+Контакты: <input type="text" name="contact_info" value="{{phot.id}}" /><br>
+Резюме: <input type="text" name="skills" value="{{phot.id}}" /><br>
+Дополнительная информация:<input type="text" name="extrainfo" value="{{phot.id}}" /><br>
+Ссылки:<input type="text" name="links" value="{{phot.id}}" /><br>
 
-
-    <input type="submit" name="button" value="Далее" /><br>
-    <!-- <input type="submit" name="button" onclick="isNext()" value="Далее" /><br> -->
-    <!-- <button onclick="window.location.href = 'extra_form.html'">Далее</button> -->
+<input type="submit" name="button_next" value="Далее" /><br>
+<!— <input type="submit" name="button" onclick="isNext()" value="Далее" /><br> —>
+<!— <button onclick="window.location.href = 'extra_form.html'">Далее</button> —>
 </form>
 
+<!— <script>
+function isNext() {
 
-<!-- <script>
-    function isNext() {
-     
-     return (str == null) || (str.length == 0);
-    }
-   </script> -->
+return (str == null) || (str.length == 0);
+}
+</script> —>
 
 {% endblock content %}

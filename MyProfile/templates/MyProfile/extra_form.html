@@ -4,33 +4,28 @@
 {% endblock %}
 {% block content %}
 <form method="post" action="extra">
-    {% csrf_token %}
+{% csrf_token %}
 
-    Напрвление<input required type="text" name="direction" value="{{phot.count_like}}" /><br>
-    Год поступления<input required type="text" name="graduate_date" value="{{phot.id}}" /><br>
+Напрвление<input required type="text" name="direction" value="{{phot.count_like}}" /><br>
+Год поступления<input required type="text" name="graduate_date" value="{{phot.id}}" /><br>
 
-    Должность<input required type="text" name="job_title" value="{{phot.id}}" /><br>
-    Подразделение<input required type="text" name="departament" value="{{phot.id}}" /><br>
+Должность<input required type="text" name="job_title" value="{{phot.id}}" /><br>
+Подразделение<input required type="text" name="departament" value="{{phot.id}}" /><br>
 
-    Должность<input required type="text" name="job_title_com" value="{{phot.id}}" /><br>
-    Название<input required type="text" name="company_title" value="{{phot.id}}" /><br>
-    Ссылка на сайт<input required type="text" name="FFF" value="{{phot.id}}" /><br>
-    Информация о компании<input required type="text" name="company_info" value="{{phot.id}}" /><br>
+Должность<input required type="text" name="job_title_com" value="{{phot.id}}" /><br>
+Название<input required type="text" name="company_title" value="{{phot.id}}" /><br>
+Ссылка на сайт<input required type="text" name="company_links" value="{{phot.id}}" /><br>
+Информация о компании<input required type="text" name="company_info" value="{{phot.id}}" /><br>
 
-
-
-
-
-    <input type="submit" name="button" value="Готово" /><br>
+<input type="submit" name="button_ready" value="Готово" /><br>
 
 </form>
 
+<!— <script>
+function isNext() {
 
-<!-- <script>
-    function isNext() {
-     
-     return (str == null) || (str.length == 0);
-    }
-   </script> -->
+return (str == null) || (str.length == 0);
+}
+</script> —>
 
 {% endblock content %}
