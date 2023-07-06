@@ -11,4 +11,5 @@ from . import views
 app_name = 'MyProfile'
 urlpatterns = [
     path('', views.main_profile, name='main_profile'),
+    path('MyProfile/change', views.create_profile, name='change_profile') # TODO Доделать
 ]

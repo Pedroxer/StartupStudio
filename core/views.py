@@ -96,6 +96,7 @@ def login_view(request):  ##Deprecated, as it was all remade with built-in templ
     if request.method == "POST":
         user = authenticate(username='Will', password='hah')
         if user is not None:
+            request.session['email'] = user.get_email_field_name()
             login(request, user)
     form = NewUserForm()
     return render(request=request, template_name="core/login.html", context={"register_form": form})
