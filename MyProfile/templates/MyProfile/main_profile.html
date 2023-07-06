@@ -6,33 +6,33 @@
 <article class="thin-container">
     <div class="main-container centered-container">
         <div class="main-info-container profile-container ">
-            <div> ФИО: {{first_name}} {{last_name}} {{surname}}<sup>cтатус: {{email}}</sup></div>
-            <div>ФОТО {{email}}</div>
-            <div>Дата рождения: {{email}}</div>
+            <div> ФИО: {{first_name}} {{last_name}} {{sername}}<sup>cтатус: {{status_id}}</sup></div>
+            <div>ФОТО {{photo}}</div>
+            <div>Дата рождения: {{birth_date}}</div>
             <div>Почта: {{email}}</div>
-            <div>Контакты:
+            <div>Контакты:{{contact_info}}
             </div>
             <div>Список проектов: {{email}}</div>
             <a href="">История ответов на заявки</a>
-            <div>Резюме:
+            <div>Резюме:{{skils}}
             </div>
-            <div>Дополнительная информация: {{email}}</div>
-            <div>Ссылки: {{email}}</div>
+            <div>Дополнительная информация: {{extrainfo}}</div>
+            <div>Ссылки: {{links}}</div>
 
             <div>В зависимости от статуса:
-                {% if СТУДЕНТ %}
-                <div>Навпрадение: {{email}}</div>
-                <div>Год поступления:</div>
-                {% elif ПРЕПОДАВАТель %}
-                <div>Должность: {{email}}</div>
-                <div>Подразделение: </div>
-                {% elif КОМПАНИЯ%}
-                <div>Должность: {{email}}</div>
-                <div>Название:</div>
-                <div><a href="">Ссылка на сайт</a></div>
-                <div>Информация о компании:</div>
+                {% if status_id == "student" %}
+                <div>Направление: {{direction}}</div>
+                <div>Год поступления:{{graduate_date}}</div>
+                {% elif status_id == "teacher" %}
+                <div>Должность: {{job_title}}</div>
+                <div>Подразделение:{{department}}</div>
+                {% elif status_id == "company"%}
+                <div>Должность: {{job_title}}</div>
+                <div>Название:{{company_title}}</div>
+                <div><a href="">Ссылка на сайт</a>{{company_links}}</div>
+                <div>Информация о компании:{{company_info}}</div>
                 {% else %}
-
+                <div>lasdfkjhgvasdfjlghaafdjklghadfjkgh</div>
                 {% endif %}
 
 
