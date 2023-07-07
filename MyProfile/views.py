@@ -1,15 +1,14 @@
-
-
-from django.http import HttpResponse
-
-
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib import messages
+
 from MyProfile.models import Profile
 from UserSystem.models import CustomUser
 from django.core.exceptions import PermissionDenied
-
-
+from core.models import Project
+from django.db.models import Q
 
 @login_required
 def main_profile(request):
@@ -17,8 +16,11 @@ def main_profile(request):
         user_profile = Profile.objects.get(email=request.user.email)
     except Profile.DoesNotExist:
         return redirect('MyProfile/ent')
-    ctx = {'first_name':user_profile.firstname,
-    'last_name':user_profile.lastname,
+    
+    projects = Project.objects.filter(Q(project_authors=request.user.id)|Q(project_participants=request.user.id))
+    
+    ctx = {'firstname':user_profile.firstname,
+    'lastname':user_profile.lastname,
     'sername':user_profile.sername,
     'birth_date':user_profile.birth_date,
     'email':user_profile.email,
@@ -35,58 +37,65 @@ def main_profile(request):
     'company_info':user_profile.company_info,
     'company_links':user_profile.company_links,
     'links':user_profile.links,
-    'contact_info':user_profile.contact_info
+    'contact_info':user_profile.contact_info,
+    'project_list':projects
 }
 
     if user_profile is None:
         raise PermissionDenied()
     return render(request, 'MyProfile/main_profile.html', ctx)
+
 @login_required
 def enter_info(request):
     return render(request, 'MyProfile/my_form.html')
+
 @login_required
 def create(request):
-
-
-        #print(request.POST['status_id'])
         task=request.POST.get("status_id")
-
         task1=request.POST.get("firstname")
-        # user_profile = Profile.objects.create(firstname=task)
         task2=request.POST.get("lastname")
-        # user_profile = Profile.objects.create(lastname=task)
         task3=request.POST.get("sername")
-        # user_profile = Profile.objects.create(sername=task)
-
         task4=request.POST.get("photo")
-        # user_profile = Profile.objects.create(photo=task)
         task5=request.POST.get("birth_date")
-        # user_profile = Profile.objects.create(birth_date=task)
         task6=request.POST.get("email")
-        # user_profile = Profile.objects.create(email=task)
         task7=request.POST.get("skills")
-        # user_profile = Profile.objects.create(skills=task)
         task8=request.POST.get("extrainfo")
-        # user_profile = Profile.objects.create(extrainfo=task)
-        task9=request.POST.get("contact_info")
-        # user_profile = Profile.objects.create(contact_info=task)
+        task9=request.POST.get("contact_info") 
         task0=request.POST.get("links")
-        # user_profile = Profile.objects.create(links=task)
 
         user_profile = Profile.objects.create(status_id=task,firstname=task1,lastname=task2,sername=task3,photo=task4,birth_date=task5,email=task6,skills=task7,extrainfo=task8,contact_info=task9,links=task0)
-
+        
         user_profile.save()
+        
         context = {
         'status_id':task,
+        'email':task6,
         }
-
-        # return redirect('')
-        return render(request, 'MyProfile/extra_form', context)
+       
+        return render(request, 'MyProfile/extra_form.html', context)
 
 @login_required
 def extra_view(request):
+    task=request.POST.get("direction",0)
+    task1=request.POST.get("graduate_date",0)
+    task2=request.POST.get("job_title",0)
+    task3=request.POST.get("departament",0)
+    #task4=request.POST.get("job_title_com")
+    task5=request.POST.get("company_title",0)
+    task6=request.POST.get("company_links",0)
+    task7=request.POST.get("company_info",0)
 
-    return render(request, 'MyProfile/extra_form')
+    task0=request.POST.get('secret')
 
 
-# Create your views here.
+    user_profile = Profile.objects.filter(email=task0).update(direction=task,graduate_date=task1,job_title=task2,department=task3,company_title=task5,company_links=task6,company_info=task7)
+
+    #user_profile.save()
+
+    return render(request, 'MyProfile/main_profile.html')
+
+@login_required
+def delete_profile(request):
+     user_profile = Profile.objects.get(email=request.user.email)
+     user_profile.delete()
+     return redirect('/news')

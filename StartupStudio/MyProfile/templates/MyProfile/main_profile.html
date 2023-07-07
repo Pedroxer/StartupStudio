@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Мой профиль</title>
+{% endblock %}
+{% block content %}
+<article class="thin-container">
+    <div class="main-container centered-container">
+        <div class="main-info-container profile-container ">
+            <div> ФИО: {{firstname}} {{lastname}} {{sername}}<sup>cтатус: {{status_id}}</sup></div>
+            <div>ФОТО {{photo}}</div>
+            <div>Дата рождения: {{birth_date}}</div>
+            <div>Почта: {{email}}</div>
+            <div>Контакты:{{contact_info}}
+            </div>
+            <div>Список проектов: {{email}}</div>
+            <a href="">История ответов на заявки</a>
+            <div>Резюме:{{skils}}
+            </div>
+            <div>Дополнительная информация: {{extrainfo}}</div>
+            <div>Ссылки: {{links}}</div>
+
+            <!-- <div>В зависимости от статуса:
+                {% if status_id == "student" %}
+                <div>Направление: {{direction}}</div>
+                <div>Год поступления:{{graduate_date}}</div>
+                {% elif status_id == "teacher" %}
+                <div>Должность: {{job_title}}</div>
+                <div>Подразделение:{{department}}</div>
+                {% elif status_id == "company"%}
+                <div>Должность: {{job_title}}</div>
+                <div>Название:{{company_title}}</div>
+                <div><a href="">Ссылка на сайт</a>{{company_links}}</div>
+                <div>Информация о компании:{{company_info}}</div>
+                {% else %}
+                <div>lasdfkjhgvasdfjlghaafdjklghadfjkgh</div>
+                {% endif %} -->
+
+
+
+                <!-- <img src="https://i.pinimg.com/736x/2b/81/a8/2b81a830e7be62b2437a493d2867c3d8.jpg"
+                style="height: 256px; width: 256px; padding-left: 50px;"> -->
+
+
+                <!-- <div class="profile_projects_container">Прошедшие проекты:
+                {% for obj in user_projects_list %}
+                <div class="shadebox previous_projects">
+                    <div class="left-container">
+                        <p>{{obj.hack_name}}</p>
+                        <p>Команда: {{obj.team}}</p>
+                        <p>Место: {{obj.place}}</p>
+                    </div>
+                    {% for term in obj.terms %}
+                    <div class="right-container">
+                        <div class="tag_container">
+                            <div class="tag">term</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div> -->
+
+                <br><input type="submit" name="create" value="Редактировать" />
+
+                <input type="submit" name="delete" value="Удалить провиль" /><br>
+
+                <!-- <button onclick="window.location.href = '../my_form.html'">Редактировать</button> -->
+
+            </div>
+        </div>
+
+
+</article>
+
+{% endblock %}

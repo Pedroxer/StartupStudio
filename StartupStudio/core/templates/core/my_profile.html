@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Мой профиль</title>
+{% endblock %}
+{% block content %}
+    <article class="thin-container">
+        <div class="main-container centered-container">
+            <div class="main-info-container profile-container ">
+                <h2>{{first_name}} {{last_name}}</h2>
+                
+                <div>Почта: {{email}}</div>
+                <div>Описание профиля: <p>{{user_bio}}</p></div>
+                <img src="" style="height: 256px; width: 256px; padding-left: 50px;">
+                <div class="profile_projects_container" >Прошедшие проекты:
+                    {% for obj in user_projects_list %}
+                    <div class="shadebox previous_projects">
+                        <div class="left-container">
+                            <p>{{obj.hack_name}}</p>
+                            <p>Команда: {{obj.team}}</p>
+                            <p>Место: {{obj.place}}</p>
+                        </div>
+                        {% for term in obj.terms %}
+                        <div class="right-container">
+                            <div class="tag_container">
+                                <div class="tag">term</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                    </div>
+            </div>
+        </div>
+        <a href="{% url 'CustomUser:my_profile_change' %}">Редактировать профиль</a>
+        <a href="% url 'CustomUser:news{' %}">Удалить профиль</a>
+
+    </article>
+    
+{% endblock %}
+
+

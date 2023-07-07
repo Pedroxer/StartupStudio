@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Новости</title>
+{% endblock %}
+{% block content %}
+    <a class="create_project_button" style="color: white" href="{% url 'core:project_create' %}"> Click here to create an event </a> {# TODO: make check permissions here #}
+    {% if object_list %}
+        {% for project in object_list %}
+            <article>
+                <h2><a href="{% url 'core:project_detail' project.id %}">{{ project.project_name }}</a></h2>
+                <h2>Тип мероприятия: {{ project.event_type }} </h2>
+                <div>{{ project.project_info }}</div>
+                <div>Направление: {{ project.direction_type }}</div>
+                <div>Навыки для участия: </div>
+                <div class="tag_container"> {% for skill in project.project_skills.all %}
+                    <div class="tag">{{ skill.skill_name }}</div>
+                {% endfor %}</div>
+                <div>Авторы: {% for author in project.project_authors.all %}
+                    <div>{{ author.username }}</div> {% endfor %}
+                </div>
+                <div>Начало: {{ project.project_start }}</div>
+                <div>Конец: {{ project.project_end }}</div>
+                <div>Статус проекта: {{ project.get_project_status_display }}</div>
+                <div class="flex-space-between" style="padding-top: 10px;"><div class="shadebox">
+                    <a href="{% url 'core:accept_project_mod' project.id %}"> Принять проект </a></div>
+                <div class="shadebox"><a href="{% url 'core:deny_project_mod' project.id %}"> Отклонить проект </a></div></div>
+
+                <p>Опубликовано: {{ project.pub_date }}</p>
+
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>На данный момент нет проектов, ожидающих рассмотрения</p>
+    {% endif %}
+
+{% endblock %}
+
+

@@ -6,20 +6,23 @@
 <article class="thin-container">
     <div class="main-container centered-container">
         <div class="main-info-container profile-container ">
-            <div> ФИО: {{first_name}} {{last_name}} {{sername}}<sup>cтатус: {{status_id}}</sup></div>
+            <div> ФИО: {{firstname}} {{lastname}} {{sername}}<sup>cтатус: {{status_id}}</sup></div>
             <div>ФОТО {{photo}}</div>
             <div>Дата рождения: {{birth_date}}</div>
             <div>Почта: {{email}}</div>
             <div>Контакты:{{contact_info}}
             </div>
-            <div>Список проектов: {{email}}</div>
+            <div>Список проектов: {% for project in project_list%}
+                    {{project.project_name}}
+                {% endfor%}
+            </div>
             <a href="">История ответов на заявки</a>
             <div>Резюме:{{skils}}
             </div>
             <div>Дополнительная информация: {{extrainfo}}</div>
             <div>Ссылки: {{links}}</div>
 
-            <!-- <div>В зависимости от статуса:
+            <div>В зависимости от статуса:
                 {% if status_id == "student" %}
                 <div>Направление: {{direction}}</div>
                 <div>Год поступления:{{graduate_date}}</div>
@@ -33,7 +36,7 @@
                 <div>Информация о компании:{{company_info}}</div>
                 {% else %}
                 <div>lasdfkjhgvasdfjlghaafdjklghadfjkgh</div>
-                {% endif %} -->
+                {% endif %}
 
 
 
@@ -61,10 +64,11 @@
             </div> -->
 
                 <br><input type="submit" name="create" value="Редактировать" />
+                <a href = "MyProfile/change">Редактировать</a>
 
-                <input type="submit" name="delete" value="Удалить провиль" /><br>
-
-                <button onclick="window.location.href = '../my_form.html'">Редактировать</button>
+                {% comment %} <input type="submit" name="delete" value="Удалить провиль" /><br> {% endcomment %}
+                <a href = "MyProfile/delete">Удалить</a>
+                <!-- <button onclick="window.location.href = '../my_form.html'">Редактировать</button> -->
 
             </div>
         </div>

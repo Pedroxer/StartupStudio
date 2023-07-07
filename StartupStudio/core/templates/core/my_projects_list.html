@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Новости</title>
+{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <div class="shadebox"><a class="create_project_button" href="{% url 'core:project_create' %}" > Нажмите, чтобы создать проект </a></div> {# TODO: make check permissions here #}
+    {% if perms.core.can_moderate_projects %}<a class="go_to_button" style="color: white" href="{% url 'core:new_pending_projects_mod' %}"> Click here moderate new projects </a>
+    {% endif %}
+    {% else %}
+        <div>Войдите, чтобы добавить проект</div>
+    {% endif %}
+    {% if owned_projects %}
+        <h2>Организованные вами проекты: </h2>
+        {% for project in owned_projects %}
+            <article class="project_article article_body thin-container">
+                <div class="left-container">
+                <h2><a href="{% url 'core:project_detail' project.id %}">{{ project.project_name }}</a></h2>
+                <h3>Тип мероприятия: {{ project.event_type }} </h3>
+                 <div class="">
+                <p>{{ project.project_info }}</p>
+                <p>Направление: {{ project.direction_type }}</p>
+                <p>Навыки для участия: </p>
+                <div class="tag_container"> {% for skill in project.project_skills.all %}
+                    <div class="tag">{{ skill.skill_name }}</div>
+                {% endfor %}</div>
+                <div>Авторы: {% for author in project.project_authors.all %}
+                    <p>{{ author.username }}</p> {% endfor %}
+                </div>
+                <p>Начало: {{ project.project_start }}</p>
+                <p>Конец: {{ project.project_end }}</p>
+                <p>Статус проекта: {{ project.get_project_status_display }}</p>
+                <p>Опубликовано: {{ project.pub_date }}</p>
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                 </div>
+                </div>
+                <div class="right-container"></div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>На данный момент нет проектов где вы организатор.</p>
+    {% endif %}
+    {% if part_projects %}
+        <h2>Проекты, где вы участник: </h2>
+        {% for project in part_projects %}
+            <article class="project_article article_body thin-container">
+                <div class="left-container">
+                <h2><a href="{% url 'core:project_detail' project.id %}">{{ project.project_name }}</a></h2>
+                <h3>Тип мероприятия: {{ project.event_type }} </h3>
+                <div class="">
+                <div>{{ project.project_info }}</div>
+                <div>Направление: {{ project.direction_type }}</div>
+                <p>Навыки для участия: </p>
+                <div class="tag_container"> {% for skill in project.project_skills.all %}
+                    <div class="tag">{{ skill.skill_name }}</div>
+                {% endfor %}</div>
+                <div>Авторы: {% for author in project.project_authors.all %}
+                    <p>{{ author.username }}</p> {% endfor %}
+                </div>
+                <p>Начало: {{ project.project_start }}</p>
+                <p>Конец: {{ project.project_end }}</p>
+                <p>Статус проекта: {{ project.get_project_status_display }}</p>
+                <p>Опубликовано: {{ project.pub_date }}</p>
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                </div>
+                </div>
+                <div class="right-container"></div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>На данный момент нет проектов, где вы участник.</p>
+    {% endif %}
+
+{% endblock %}
+
+

@@ -12,6 +12,7 @@ app_name = 'MyProfile'
 urlpatterns = [
     path('', views.main_profile, name='main_profile'),
     path('MyProfile/create', views.create, name='create'),
-    path('MyProfile/ent', views.enter_info, name='enter_info'),
-    path('MyProfile/extra', views.extra_view, name='extra_view')
+    path('MyProfile/ent', views.enter_info, name='enter_info'), #на заполнение формы начальной
+    path('MyProfile/extra_view', views.extra_view, name='extra_view'),
+    path('MyProfile/delete', views.delete_profile, name='delete'),
 ]

@@ -1,0 +1,21 @@
+{% extends "my_profile.html" %}
+{% block content %}
+<article class="thin-container">
+    <div class="main-container centered-container">
+        <div class="main-info-container profile-container ">
+            <h2>{{first_name}} {{last_name}}</h2>
+            <div>Имя:</div>
+            <div>Фамилия:</div>
+            <div>Почта: </div>
+            <div>Описание профиля: <p></p></div>
+            
+            
+                
+            
+        </div>
+    </div>
+    <a href="{% url 'CustomUser:my_profile_change' %}">Редактировать профиль</a>
+    <a href="% url 'CustomUser:news{' %}">Удалить профиль</a>
+
+</article>
+{% endblock %}

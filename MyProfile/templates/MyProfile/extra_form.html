@@ -3,30 +3,27 @@
 <title> Дополнительная форма</title>
 {% endblock %}
 {% block content %}
-<form method="post" action="extra">
-{% csrf_token %}
-{% if status_id == 'student'%}
-
-Напрвление<input required type="text" name="direction" value="{{phot.count_like}}" /><br>
-Год поступления<input required type="text" name="graduate_date" value="{{phot.id}}" /><br>
-{% elif status_id == 'teacher'%}
-Должность<input required type="text" name="job_title" value="{{phot.id}}" /><br>
-Подразделение<input required type="text" name="departament" value="{{phot.id}}" /><br>
-{%else%}
-Должность<input required type="text" name="job_title_com" value="{{phot.id}}" /><br>
-Название<input required type="text" name="company_title" value="{{phot.id}}" /><br>
-Ссылка на сайт<input required type="text" name="company_links" value="{{phot.id}}" /><br>
-Информация о компании<input required type="text" name="company_info" value="{{phot.id}}" /><br>
-{%endif%}
-<input type="submit" name="button_ready" value="Готово" /><br>
-
-</form>
-
-<!— <script>
-function isNext() {
-
-return (str == null) || (str.length == 0);
-}
-</script> —>
+<form method="post" action="extra_view">
+    {% csrf_token %}
+    {% if status_id == 'student'%}
+    
+    <input type="hidden" name="secret" value="{{email}}"/>
+    
+    
+    Напрвление<input required type="text" name="direction"  /><br>
+    Год поступления<input required type="date" name="graduate_date" /><br>
+    {% elif status_id == 'teacher'%}
+    Должность<input required type="text" name="job_title" /><br>
+    Подразделение<input required type="text" name="departament" /><br>
+    {%else%}
+    Должность<input required type="text" name="job_title" /><br>
+    Название<input required type="text" name="company_title"  /><br>
+    Ссылка на сайт<input required type="text" name="company_links"  /><br>
+    Информация о компании<input required type="text" name="company_info"  /><br>
+    {%endif%}
+    <input type="submit" name="button_ready" value="Готово" /><br>
+    <!-- <button onclick="window.location.href = 'MyProfile/main_profile.html'">Далее</button>  -->
+    
+    </form>
 
 {% endblock content %}

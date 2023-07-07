@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Мероприятия</title>
+{% endblock %}
+{% block content %}
+    {% if tag %}
+        <p align="center"><a href="{% url 'EventCalendar:events' %}">Сбросить фильтры</a></p>
+    {% endif %}
+{% if latest_event_list %}
+    {% for event_article in latest_event_list %}
+        <article>
+            <h2><a href="{% url 'EventCalendar:detail' event_article.id %}">{{ event_article.event_title }}</a></h2>
+        <div class="articleMainBody" style="display: flex; justify-content: space-between;">
+            <div class="article_text event_container">
+                <p> Конец приема заявок: {{ event_article.entry_deadline }} </p>
+                <p> Начало: {{ event_article.start_date }} </p>
+                <p> Конец: {{ event_article.ending_date }} </p>
+            <p> Организатор: {{ event_article.event_organiser  }}</p>
+            <p> {{event_article.formatted_markdown | safe}} </p>
+            </div>
+            <div class="article_image">
+            <img src="{{ event_article.event_image }}" style="max-height: 256px; max-width: 400px; padding-left: 50px;">
+            </div>
+        </div>
+        {% for tag in event_article.event_tags.all %}
+            <p class="tag" style="display:inline;"><a href="{% url 'EventCalendar:events_tag_filtered' tag.tag_name %}">{{ tag.tag_name }}</a></p>
+        {% endfor %}
+        </article>
+    {% endfor %}
+{% else %}
+    <p>No news are available.</p>
+{% endif %}
+{% endblock %}

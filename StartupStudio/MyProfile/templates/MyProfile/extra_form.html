@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}
+<title> Дополнительная форма</title>
+{% endblock %}
+{% block content %}
+<form method="post" action="extra_view">
+    {% csrf_token %}
+    {% if status_id == 'student'%}
+    
+    Напрвление<input required type="text" name="direction"  /><br>
+    Год поступления<input required type="date" name="graduate_date" /><br>
+    {% elif status_id == 'teacher'%}
+    Должность<input required type="text" name="job_title" /><br>
+    Подразделение<input required type="text" name="departament" /><br>
+    {%else%}
+    Должность<input required type="text" name="job_title" /><br>
+    Название<input required type="text" name="company_title"  /><br>
+    Ссылка на сайт<input required type="text" name="company_links"  /><br>
+    Информация о компании<input required type="text" name="company_info"  /><br>
+    {%endif%}
+    <input type="submit" name="button_ready" value="Готово" /><br>
+    <!-- <button onclick="window.location.href = 'MyProfile/main_profile.html'">Далее</button>  -->
+    
+    </form>
+
+
+
+
+{% endblock content %}
