@@ -14,5 +14,7 @@ urlpatterns = [
     path('MyProfile/create', views.create, name='create'),
     path('MyProfile/ent', views.enter_info, name='enter_info'), #на заполнение формы начальной
     path('MyProfile/extra_view', views.extra_view, name='extra_view'),
+    path('MyProfile/change', views.change, name='change'),
     path('MyProfile/delete', views.delete_profile, name='delete'),
+    path('MyProfile/update', views.update, name='update'),
 ]

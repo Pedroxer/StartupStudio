@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+<title>ФОРМА</title>
+{% endblock %}
+{% block content %}
+<form method="post" action="update">
+{% csrf_token %}
+Фамилия<input  type="text" name="firstname" value="{{last_name}}"/> <br>
+Имя<input  type="text" name="lastname"  value="{{first_name}}" /><br>
+Отчество<input  type="text" name="sername"   value="{{sername}}"/><br>
+<!-- Статус <select required name="status_id" >
+<option disabled>Выберите статус</option>
+<option value="student">Студент</option>
+<option value="teacher">Преподаватель</option>
+<option value="company">Представитель компании</option>
+</select><br> -->
+
+Фото:<input type="file" name="photo" multiple accept="image/*,image/jpeg"><br>
+<!-- Дата рождения: <input type="date" name="birth_date" value="{{birth_date}}"/><br> -->
+<!-- Почта: <input type="email" name="email"  /><br> -->
+Контакты: <input type="text" name="contact_info" value="{{adres}}"/><br>
+Резюме: <input type="text" name="skills" value="{{skils}}" /><br>
+Дополнительная информация:<input type="text" name="extrainfo" value="{{extrainfo}}" /><br>
+Ссылки:<input type="text" name="links" value="{{links}}"/><br>
+
+{% if status_id == 'student'%}
+
+<input type="hidden" name="secret" value="{{email}}"/> 
+
+Напрвление<input  type="text" name="direction"  value="{{direction}}"/><br>
+<!-- Год поступления<input  type="date" name="graduate_date" value="{{graduate_date}}" /><br> -->
+{% elif status_id == 'teacher'%}
+Должность<input  type="text" name="job_title" value="{{job_title}}"/><br>
+Подразделение<input  type="text" name="departament" value="{{departament}}"/><br>
+{%else%}
+Должность<input  type="text" name="job_title" value="{{job_title}}"/><br>
+Название<input  type="text" name="company_title"  value="{{company_title}}"/><br>
+Ссылка на сайт<input  type="text" name="company_links"  value="{{company_links}}"/><br>
+Информация о компании<input  type="text" name="company_info" value="{{company_info}}" /><br>
+{%endif%}
+<input type="submit" name="button_update" value="Готово" /><br>
+<!-- <input type="submit" name="button" onclick="MyProfile/extra_form.html" value="Далее" /><br>  -->
+<!-- <button onclick="window.location.href = 'MyProfile/extra_form.html'">Далее</button>  -->
+</form> 
+
+
+{% endblock content %}

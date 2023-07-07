@@ -6,15 +6,16 @@
 <article class="thin-container">
     <div class="main-container centered-container">
         <div class="main-info-container profile-container ">
-            <div> ФИО: {{firstname}} {{lastname}} {{sername}}<sup>cтатус: {{status_id}}</sup></div>
+            <div> ФИО: {{firstname}} {{lastname}} {{sername}}<sup> {{status_id}}</sup></div>
             <div>ФОТО {{photo}}</div>
             <div>Дата рождения: {{birth_date}}</div>
             <div>Почта: {{email}}</div>
             <div>Контакты:{{contact_info}}
             </div>
+            <!-- <div>Список проектов: {{email}}</div> -->
             <div>Список проектов: {% for project in project_list%}
-                    {{project.project_name}}
-                {% endfor%}
+                {{project.project_name}}
+            {% endfor%}
             </div>
             <a href="">История ответов на заявки</a>
             <div>Резюме:{{skils}}
@@ -63,12 +64,12 @@
                 {% endfor %}
             </div> -->
 
-                <br><input type="submit" name="create" value="Редактировать" />
-                <a href = "MyProfile/change">Редактировать</a>
+                <!-- <br><input type="submit" name="create" value="Редактировать" />
 
-                {% comment %} <input type="submit" name="delete" value="Удалить провиль" /><br> {% endcomment %}
-                <a href = "MyProfile/delete">Удалить</a>
-                <!-- <button onclick="window.location.href = '../my_form.html'">Редактировать</button> -->
+                <input type="submit" name="delete" value="Удалить провиль" /><br> -->
+
+                <button onclick="window.location.href = 'MyProfile/change'">Редактировать</button>
+                <button onclick="window.location.href = 'MyProfile/delete'">Удалить</button>
 
             </div>
         </div>
