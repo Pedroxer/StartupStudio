@@ -5,18 +5,19 @@
 {% block content %}
 <form method="post" action="extra">
 {% csrf_token %}
+{% if status_id == 'student'%}
 
 Напрвление<input required type="text" name="direction" value="{{phot.count_like}}" /><br>
 Год поступления<input required type="text" name="graduate_date" value="{{phot.id}}" /><br>
-
+{% elif status_id == 'teacher'%}
 Должность<input required type="text" name="job_title" value="{{phot.id}}" /><br>
 Подразделение<input required type="text" name="departament" value="{{phot.id}}" /><br>
-
+{%else%}
 Должность<input required type="text" name="job_title_com" value="{{phot.id}}" /><br>
 Название<input required type="text" name="company_title" value="{{phot.id}}" /><br>
 Ссылка на сайт<input required type="text" name="company_links" value="{{phot.id}}" /><br>
 Информация о компании<input required type="text" name="company_info" value="{{phot.id}}" /><br>
-
+{%endif%}
 <input type="submit" name="button_ready" value="Готово" /><br>
 
 </form>

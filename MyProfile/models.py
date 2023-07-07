@@ -1,14 +1,13 @@
 from django.db import models
 from datetime import date
 
-class Status(models.Model):
-    name_status = models.CharField(max_length=30, verbose_name="Status Name")
+# class Status(models.Model):
+#     name_status = models.CharField(max_length=30, verbose_name="Status Name")
+#
+#     def __str__(self):
+#         return self.name_status
 
-    def __str__(self):
-        return self.name_status
-    def __repr__(self)->str:
-        return self.name_status
-    
+
 class Profile(models.Model):
 
     # Common Fields
@@ -23,7 +22,8 @@ class Profile(models.Model):
     links = models.CharField(max_length=300, help_text="Ссылки на социальные сети, для связи", blank=True, null=True, verbose_name="Links")
     extrainfo = models.CharField(max_length=300, help_text="Дополнительная информация", blank = True, null = True, verbose_name="Extra Information")
 
-    status_id = models.ForeignKey(Status, on_delete=models.CASCADE)
+    # status_id = models.ForeignKey(Status, on_delete=models.CASCADE)
+    status_id=models.CharField(max_length = 30, help_text = "Введите статус", verbose_name="Status Name")
 
     # Status Fields
     # for student
@@ -37,4 +37,6 @@ class Profile(models.Model):
     department = models.CharField(max_length=30, help_text="Укажите свою кафедру", verbose_name="Department")
 
     def __str__(self):
-        return self.field_name
+        return self.email
+    def __repr__(self)->str:
+        return self.email

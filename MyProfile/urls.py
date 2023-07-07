@@ -11,5 +11,7 @@ from . import views
 app_name = 'MyProfile'
 urlpatterns = [
     path('', views.main_profile, name='main_profile'),
-    path('MyProfile/change', views.create_profile, name='change_profile') # TODO Доделать
+    path('MyProfile/create', views.create, name='create'),
+    path('MyProfile/ent', views.enter_info, name='enter_info'),
+    path('MyProfile/extra', views.extra_view, name='extra_view')
 ]
